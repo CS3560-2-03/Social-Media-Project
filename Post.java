@@ -6,15 +6,16 @@ public class Post {
 	private String textContent;
 	private String embedLink;
 	private int votes;
+	private Account author;
 	private List<Comment> comments;
 
 	// Create post with no embedded image. Generates a postId
-	public Post(title, textContent){
+	public Post(author, title, textContent){
 
 	}
 
 	// Create post with embedded image. Generates a postId
-	public Post(title, textContent, embedLink){
+	public Post(author, title, textContent, embedLink){
 
 	}
 
@@ -61,5 +62,9 @@ public class Post {
 
 	public String getEmbedLink(){
 
+	}
+
+	public Account getAuthor(){
+		
 	}
 }
