@@ -1,13 +1,13 @@
 import java.util.*;
 
 public class Account {
-	private int accountID;
+	private int accountId;
 	private String username;
 	private String password;
 	private String displayName;
 	private List<Post> postHistory;
 
-	// Sets username and password. Generates an accountID
+	// Sets username and password. Generates an accountId
 	public Account(username, password){
 
 	}
