@@ -4,6 +4,11 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 public class GuiPrototype {
+    private final Font XL_FONT = new Font("Arial", Font.BOLD, 48);
+    private final Font L_FONT = new Font("Arial", Font.BOLD, 24);
+    private final Font M_FONT = new Font("Arial", Font.PLAIN, 20);
+    private final Font S_FONT = new Font("Arial", Font.PLAIN, 16);
+    
     private ScrollablePanel contentFeed;
     private JPanel cards;
     private CardLayout cl;
@@ -46,44 +51,51 @@ public class GuiPrototype {
         // having changeFontSize() also look for JButtons,
         // then updating the global key listener to include the sidebar
         sidebar = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx=0; gbc.gridy=GridBagConstraints.RELATIVE;
-        gbc.insets = new Insets(0, 0, 5, 0);
         
         JButton homeBtn = new JButton("Home");
-        homeBtn.setFont(new Font("Arial", Font.BOLD, 48));
+        homeBtn.setFont(XL_FONT);
         homeBtn.addActionListener(event->cl.show(cards, "home"));
 
         
         JLabel sortLbl = new JLabel("Sort", SwingConstants.CENTER);
+        sortLbl.setFont(L_FONT);
 
         ButtonGroup sortBtns = new ButtonGroup();
         JRadioButton recent = new JRadioButton("Recent");
         JRadioButton popular = new JRadioButton("Popular");
+        recent.setFont(M_FONT);
+        popular.setFont(M_FONT);
         sortBtns.add(recent);
         sortBtns.add(popular);
 
         JLabel filterLbl = new JLabel("Filter", SwingConstants.CENTER);
+        filterLbl.setFont(L_FONT);
 
         JCheckBox time = new JCheckBox("Time");
         JCheckBox followed = new JCheckBox("Followed");
+        time.setFont(M_FONT);
+        followed.setFont(M_FONT);
         
         
         JButton loginBtn = new JButton("Login");
-        loginBtn.setFont(new Font("Arial", Font.BOLD, 48));
+        loginBtn.setFont(XL_FONT);
         loginBtn.addActionListener(event->cl.show(cards, "loginScreen"));
 
         sortLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
         homeBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         filterLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-        
+
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx=0; gbc.gridy=GridBagConstraints.RELATIVE;
+        gbc.insets = new Insets(0, 0, 5, 0);
+        gbc.fill=GridBagConstraints.HORIZONTAL;
         
         sidebar.add(homeBtn, gbc);
         sidebar.add(Box.createRigidArea(new Dimension(0, 10)), gbc);
-        sidebar.add(sortLbl, gbc);
-        gbc.fill=GridBagConstraints.HORIZONTAL;
         sidebar.add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
+        sidebar.add(sortLbl, gbc);
         sidebar.add(recent, gbc);
         sidebar.add(popular, gbc);
         sidebar.add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
