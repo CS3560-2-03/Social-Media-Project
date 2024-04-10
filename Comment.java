@@ -4,21 +4,21 @@ public class Comment {
 	private String content;
 	private int votes;
 
-	public Comment(author, content){
+	public Comment(String author, String content){
 
 	}
 
 	public Account getAuthor() {
-
+		return author;
 	}
 
 	// No setter for author because it should never change
 
 	public String getContent(){
-
+		return content;
 	}
 
-	public void setContent(content){
+	public void setContent(String content){
 
 	}
 
@@ -33,6 +33,6 @@ public class Comment {
 	}
 
 	public int getId() {
-		
+		return commentId;
 	}
 }

@@ -8,8 +8,9 @@ public class Account {
 	private List<Post> postHistory;
 
 	// Sets username and password. Generates an accountId
-	public Account(username, password){
-
+	public Account(String username, String password){
+		this.username = username;
+		this.password = password;
 	}
 
 	/* Allows user to create a post. 
@@ -21,19 +22,19 @@ public class Account {
 	}
 
 	// Removes a specific post from postHistory
-	public void removePost(post){
+	public void removePost(Post post){
 
 	}
 
-	public void setDisplayName(displayName){
-
+	public void setDisplayName(String displayName){
+		displayName = displayName;
 	}
 
 	public String getDisplayName(){
-
+		return displayName;
 	}
 
 	public int getId(){
-
+		return accountId;
 	}
 }

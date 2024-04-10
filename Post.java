@@ -10,12 +10,12 @@ public class Post {
 	private List<Comment> comments;
 
 	// Create post with no embedded image. Generates a postId
-	public Post(author, title, textContent){
+	public Post(String author, String title, String textContent){
 
 	}
 
 	// Create post with embedded image. Generates a postId
-	public Post(author, title, textContent, embedLink){
+	public Post(String author, String title, String textContent, String embedLink){
 
 	}
 
@@ -40,31 +40,31 @@ public class Post {
 	}
 
 	public int getVotes(){
-
+		return 0;
 	}
 	// votes has no setter because it should only be modified by upvote() or downvote()
 
 	public String getTextContent(){
-
+		return null;
 	}
 
-	public void setTextContent(content){
+	public void setTextContent(String content){
 
 	}
 
 	public String getTitle(){
-
+		return null;
 	}
 
-	public void setTitle(title){
+	public void setTitle(String title){
 
 	}
 
 	public String getEmbedLink(){
-
+		return null;
 	}
 
 	public Account getAuthor(){
-		
+		return author;
 	}
 }
