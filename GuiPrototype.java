@@ -46,10 +46,6 @@ public class GuiPrototype {
     }
 
     private void setupSidebar(JFrame frame){
-        // FUTURE ADDITIONS:
-        // we can make this sidebar scale with Ctrl+ or Ctrl- too by just
-        // having changeFontSize() also look for JButtons,
-        // then updating the global key listener to include the sidebar
         sidebar = new JPanel(new GridBagLayout());
         
         JButton homeBtn = new JButton("Home");
@@ -158,14 +154,16 @@ public class GuiPrototype {
                 if (event instanceof KeyEvent) {
                     KeyEvent keyEvent = (KeyEvent) event;
                     if (keyEvent.getID() == KeyEvent.KEY_PRESSED) {
-                        if (keyEvent.getKeyCode() == KeyEvent.VK_EQUALS && keyEvent.isControlDown()) {
+                        if (keyEvent.getKeyCode() == KeyEvent.VK_EQUALS && keyEvent.isControlDown() && zoomLvl < 9) {
                             zoomLvl++;
                             contentFeed.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
                             changeFontSize(contentFeed, 2);
+                            changeFontSize(sidebar, 2);
                         } else if (keyEvent.getKeyCode() == KeyEvent.VK_MINUS && keyEvent.isControlDown() && zoomLvl > 0) {
                             zoomLvl--;
                             contentFeed.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
                             changeFontSize(contentFeed, -2);
+                            changeFontSize(sidebar, -2);
                         }
                     }
                 }
@@ -181,6 +179,11 @@ public class GuiPrototype {
                 Font currentFont = label.getFont();
                 int newSize = currentFont.getSize() + amount;
                 label.setFont(currentFont.deriveFont((float) newSize));
+            } else if (comp instanceof JButton) {
+                JButton btn = (JButton) comp;
+                Font currentFont = btn.getFont(); 
+                int newSize = currentFont.getSize() + amount; 
+                btn.setFont(currentFont.deriveFont((float) newSize));
             } else if (comp instanceof Container) {
                 changeFontSize((Container) comp, amount); // Recursively search in nested containers
             }
