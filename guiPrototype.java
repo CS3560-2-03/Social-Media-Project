@@ -11,39 +11,54 @@ public class guiPrototype {
     private JScrollPane sp;
     
     public guiPrototype(){
-        zoomLvl = 1;
+        zoomLvl = 4;
+        cl = new CardLayout();
+        cards = new JPanel(cl);
+
         JFrame frame = new JFrame("UI Test");
         frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 400);
+        frame.setSize(1200, 800);
         frame.setBackground(Color.decode("#444444"));
 
-        /* === Content Feed === */
         setupContentFeed(frame);
         setupPostLoading();
+
+        setupLoginScreen();
 
         // This sets up a global key listener. Used for zooming in and out with Ctrl+ or Ctrl-
         Toolkit.getDefaultToolkit().addAWTEventListener(new GlobalKeyListener(), AWTEvent.KEY_EVENT_MASK);
 
-        cl = new CardLayout();
-        cards = new JPanel(cl);
         cards.add(sp, "home");
         cl.show(cards, "home");
         frame.add(cards, BorderLayout.CENTER);
 
         // For the side bar
         JPanel sideBar = new JPanel();
+        sideBar.setLayout(new BoxLayout(sideBar, BoxLayout.Y_AXIS));
         JButton homeBtn = new JButton("Home");
         homeBtn.addActionListener(event->cl.show(cards, "home"));
         sideBar.add(homeBtn);
-        JButton tempBtn = new JButton("Temp");
-        tempBtn.addActionListener(event->expandPost());
+
+        // For testing purposes. Delete later.
+        JButton tempBtn = new JButton("Login");
+        tempBtn.addActionListener(event->cl.show(cards, "loginScreen"));
         sideBar.add(tempBtn);
 
         frame.add(sideBar, BorderLayout.WEST);
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+
+    private void setupLoginScreen(){
+        JPanel card = new LoginScreen(cl, cards);
+        
+        cards.add(card, "loginScreen");
+    }
+
+    private boolean validateLogin(String username, String password){
+        return false;
     }
 
     // Creates content feed area
@@ -130,7 +145,7 @@ public class guiPrototype {
         author.setAlignmentX(Component.LEFT_ALIGNMENT);
         content.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // innerPanel.setCursor(new Cursor(Cursor.HAND_CURSOR)); // Change cursor to hand cursor
+        // innerPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         // innerPanel.addMouseListener(new MouseAdapter() {
         //     @Override
         //     public void mouseClicked(MouseEvent e) {
