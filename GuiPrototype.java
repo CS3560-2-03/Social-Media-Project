@@ -9,6 +9,7 @@ public class GuiPrototype {
     private CardLayout cl;
     private int zoomLvl;
     private JScrollPane sp;
+    private JPanel sidebar;
     
     public GuiPrototype(){
         zoomLvl = 4;
@@ -33,22 +34,69 @@ public class GuiPrototype {
         cl.show(cards, "home");
         frame.add(cards, BorderLayout.CENTER);
 
-        // For the side bar
-        JPanel sideBar = new JPanel();
-        sideBar.setLayout(new BoxLayout(sideBar, BoxLayout.Y_AXIS));
-        JButton homeBtn = new JButton("Home");
-        homeBtn.addActionListener(event->cl.show(cards, "home"));
-        sideBar.add(homeBtn);
-
-        // For testing purposes. Delete later.
-        JButton tempBtn = new JButton("Login");
-        tempBtn.addActionListener(event->cl.show(cards, "loginScreen"));
-        sideBar.add(tempBtn);
-
-        frame.add(sideBar, BorderLayout.WEST);
+        setupSidebar(frame);
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+
+    private void setupSidebar(JFrame frame){
+        // FUTURE ADDITIONS:
+        // we can make this sidebar scale with Ctrl+ or Ctrl- too by just
+        // having changeFontSize() also look for JButtons,
+        // then updating the global key listener to include the sidebar
+        sidebar = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx=0; gbc.gridy=GridBagConstraints.RELATIVE;
+        gbc.insets = new Insets(0, 0, 5, 0);
+        
+        JButton homeBtn = new JButton("Home");
+        homeBtn.setFont(new Font("Arial", Font.BOLD, 48));
+        homeBtn.addActionListener(event->cl.show(cards, "home"));
+
+        
+        JLabel sortLbl = new JLabel("Sort", SwingConstants.CENTER);
+
+        ButtonGroup sortBtns = new ButtonGroup();
+        JRadioButton recent = new JRadioButton("Recent");
+        JRadioButton popular = new JRadioButton("Popular");
+        sortBtns.add(recent);
+        sortBtns.add(popular);
+
+        JLabel filterLbl = new JLabel("Filter", SwingConstants.CENTER);
+
+        JCheckBox time = new JCheckBox("Time");
+        JCheckBox followed = new JCheckBox("Followed");
+        
+        
+        JButton loginBtn = new JButton("Login");
+        loginBtn.setFont(new Font("Arial", Font.BOLD, 48));
+        loginBtn.addActionListener(event->cl.show(cards, "loginScreen"));
+
+        sortLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+        homeBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        loginBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+        filterLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        
+        sidebar.add(homeBtn, gbc);
+        sidebar.add(Box.createRigidArea(new Dimension(0, 10)), gbc);
+        sidebar.add(sortLbl, gbc);
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        sidebar.add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
+        sidebar.add(recent, gbc);
+        sidebar.add(popular, gbc);
+        sidebar.add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
+        sidebar.add(filterLbl, gbc);
+        sidebar.add(time, gbc);
+        sidebar.add(followed, gbc);
+        
+        gbc.weighty = 1.0; // This is for spacing
+        sidebar.add(new JPanel(), gbc);
+        gbc.weighty=0;
+        
+        sidebar.add(loginBtn, gbc);
+        frame.add(sidebar, BorderLayout.WEST);
     }
 
     private void setupLoginScreen(){
@@ -112,6 +160,8 @@ public class GuiPrototype {
             }
         }
 
+    // Takes a component and amount.
+    // Goes through every subcomponent and increases the font size of JLabels.
     private void changeFontSize(Container container, int amount) {
         for (Component comp : container.getComponents()) {
             if (comp instanceof JLabel) {
