@@ -3,14 +3,14 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-public class guiPrototype {
+public class GuiPrototype {
     private ScrollablePanel contentFeed;
     private JPanel cards;
     private CardLayout cl;
     private int zoomLvl;
     private JScrollPane sp;
     
-    public guiPrototype(){
+    public GuiPrototype(){
         zoomLvl = 4;
         cl = new CardLayout();
         cards = new JPanel(cl);
@@ -183,6 +183,6 @@ public class guiPrototype {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(()->new guiPrototype());
+        SwingUtilities.invokeLater(()->new GuiPrototype());
     }
 }
