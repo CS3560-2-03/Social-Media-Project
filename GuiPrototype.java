@@ -8,6 +8,8 @@ public class GuiPrototype {
     private final Font L_FONT = new Font("Arial", Font.BOLD, 24);
     private final Font M_FONT = new Font("Arial", Font.PLAIN, 20);
     private final Font S_FONT = new Font("Arial", Font.PLAIN, 16);
+    private final int MAX_ZOOM = 12;
+    private final int MIN_ZOOM = 0;
     
     private ScrollablePanel contentFeed;
     private JPanel cards;
@@ -30,7 +32,8 @@ public class GuiPrototype {
         setupContentFeed(frame);
         setupPostLoading();
 
-        setupLoginScreen();
+        JPanel card = new LoginScreen(cl, cards);
+        cards.add(card, "loginScreen");
         JPanel accountCreation = new AccountCreationScreen(cl, cards);
         cards.add(accountCreation, "accountCreationScreen");
 
@@ -41,78 +44,11 @@ public class GuiPrototype {
         cl.show(cards, "home");
         frame.add(cards, BorderLayout.CENTER);
 
-        setupSidebar(frame);
+        sidebar = new Sidebar(cl, cards);
+        frame.add(sidebar, BorderLayout.WEST);
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-    }
-
-    private void setupSidebar(JFrame frame){
-        sidebar = new JPanel(new GridBagLayout());
-        
-        JButton homeBtn = new JButton("Home");
-        homeBtn.setFont(XL_FONT);
-        homeBtn.addActionListener(event->cl.show(cards, "home"));
-
-        
-        JLabel sortLbl = new JLabel("Sort", SwingConstants.CENTER);
-        sortLbl.setFont(L_FONT);
-
-        ButtonGroup sortBtns = new ButtonGroup();
-        JRadioButton recent = new JRadioButton("Recent");
-        JRadioButton popular = new JRadioButton("Popular");
-        recent.setFont(M_FONT);
-        popular.setFont(M_FONT);
-        sortBtns.add(recent);
-        sortBtns.add(popular);
-
-        JLabel filterLbl = new JLabel("Filter", SwingConstants.CENTER);
-        filterLbl.setFont(L_FONT);
-
-        JCheckBox time = new JCheckBox("Time");
-        JCheckBox followed = new JCheckBox("Followed");
-        time.setFont(M_FONT);
-        followed.setFont(M_FONT);
-        
-        
-        JButton loginBtn = new JButton("Login");
-        loginBtn.setFont(XL_FONT);
-        loginBtn.addActionListener(event->cl.show(cards, "loginScreen"));
-
-        sortLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-        homeBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-        loginBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-        filterLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx=0; gbc.gridy=GridBagConstraints.RELATIVE;
-        gbc.insets = new Insets(0, 0, 5, 0);
-        gbc.fill=GridBagConstraints.HORIZONTAL;
-        
-        sidebar.add(homeBtn, gbc);
-        sidebar.add(Box.createRigidArea(new Dimension(0, 10)), gbc);
-        sidebar.add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
-        sidebar.add(sortLbl, gbc);
-        sidebar.add(recent, gbc);
-        sidebar.add(popular, gbc);
-        sidebar.add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
-        sidebar.add(filterLbl, gbc);
-        sidebar.add(time, gbc);
-        sidebar.add(followed, gbc);
-        
-        gbc.weighty = 1.0; // This is for spacing
-        sidebar.add(new JPanel(), gbc);
-        gbc.weighty=0;
-        
-        sidebar.add(loginBtn, gbc);
-        frame.add(sidebar, BorderLayout.WEST);
-    }
-
-    private void setupLoginScreen(){
-        JPanel card = new LoginScreen(cl, cards);
-        
-        cards.add(card, "loginScreen");
     }
 
     private boolean validateLogin(String username, String password){
@@ -156,12 +92,12 @@ public class GuiPrototype {
                 if (event instanceof KeyEvent) {
                     KeyEvent keyEvent = (KeyEvent) event;
                     if (keyEvent.getID() == KeyEvent.KEY_PRESSED) {
-                        if (keyEvent.getKeyCode() == KeyEvent.VK_EQUALS && keyEvent.isControlDown() && zoomLvl < 9) {
+                        if (keyEvent.getKeyCode() == KeyEvent.VK_EQUALS && keyEvent.isControlDown() && zoomLvl < MAX_ZOOM) {
                             zoomLvl++;
                             contentFeed.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
                             changeFontSize(contentFeed, 2);
                             changeFontSize(sidebar, 2);
-                        } else if (keyEvent.getKeyCode() == KeyEvent.VK_MINUS && keyEvent.isControlDown() && zoomLvl > 0) {
+                        } else if (keyEvent.getKeyCode() == KeyEvent.VK_MINUS && keyEvent.isControlDown() && zoomLvl > MIN_ZOOM) {
                             zoomLvl--;
                             contentFeed.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
                             changeFontSize(contentFeed, -2);
