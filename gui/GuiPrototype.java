@@ -4,13 +4,6 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 public class GuiPrototype {
-    private final Font XL_FONT = new Font("Arial", Font.BOLD, 48);
-    private final Font L_FONT = new Font("Arial", Font.BOLD, 24);
-    private final Font M_FONT = new Font("Arial", Font.PLAIN, 20);
-    private final Font S_FONT = new Font("Arial", Font.PLAIN, 16);
-    private final int MAX_ZOOM = 12;
-    private final int MIN_ZOOM = 0;
-    
     private ScrollablePanel contentFeed;
     private JPanel cards;
     private CardLayout cl;
@@ -51,10 +44,6 @@ public class GuiPrototype {
         frame.setVisible(true);
     }
 
-    private boolean validateLogin(String username, String password){
-        return false;
-    }
-
     // Creates content feed area
     private void setupContentFeed(JFrame frame) {
         contentFeed = new ScrollablePanel();
@@ -92,12 +81,12 @@ public class GuiPrototype {
                 if (event instanceof KeyEvent) {
                     KeyEvent keyEvent = (KeyEvent) event;
                     if (keyEvent.getID() == KeyEvent.KEY_PRESSED) {
-                        if (keyEvent.getKeyCode() == KeyEvent.VK_EQUALS && keyEvent.isControlDown() && zoomLvl < MAX_ZOOM) {
+                        if (keyEvent.getKeyCode() == KeyEvent.VK_EQUALS && keyEvent.isControlDown() && zoomLvl < Formats.MAX_ZOOM) {
                             zoomLvl++;
                             contentFeed.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
                             changeFontSize(contentFeed, 2);
                             changeFontSize(sidebar, 2);
-                        } else if (keyEvent.getKeyCode() == KeyEvent.VK_MINUS && keyEvent.isControlDown() && zoomLvl > MIN_ZOOM) {
+                        } else if (keyEvent.getKeyCode() == KeyEvent.VK_MINUS && keyEvent.isControlDown() && zoomLvl > Formats.MIN_ZOOM) {
                             zoomLvl--;
                             contentFeed.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
                             changeFontSize(contentFeed, -2);
@@ -109,7 +98,7 @@ public class GuiPrototype {
         }
 
     // Takes a component and amount.
-    // Goes through every subcomponent and increases the font size of JLabels.
+    // Goes through every subcomponent and increases the font size of JLabels or JButtons
     private void changeFontSize(Container container, int amount) {
         for (Component comp : container.getComponents()) {
             if (comp instanceof JLabel) {

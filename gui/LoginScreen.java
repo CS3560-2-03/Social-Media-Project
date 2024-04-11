@@ -2,14 +2,9 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
 
 public class LoginScreen extends JPanel {
-    private String ACCOUNTS_FILE = "accounts.csv";
-    
     public LoginScreen(CardLayout cl, JPanel cards){
         setLayout(new GridBagLayout());
 
@@ -56,21 +51,8 @@ public class LoginScreen extends JPanel {
 
     // At the moment (4/9 8PM) just returns true if username/password matches one in accounts.csv
     private boolean validateLogin(String username, String password){
-        boolean valid = false;
-        String line;
-
-        try (BufferedReader br = new BufferedReader(new FileReader(ACCOUNTS_FILE))) {
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(",");
-                if (values[0].equals(username) && values[1].equals(password)) {
-                    valid = true;
-                    break;
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("accounts.csv not found");
-        }
-        System.out.println(valid);
-        return valid;
+        boolean result = (username.equals("abc") && password.equals("123"));
+        System.out.println(result);
+        return result;
     }
 }

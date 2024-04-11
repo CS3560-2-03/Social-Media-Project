@@ -7,11 +7,12 @@ public class Sidebar extends JPanel {
     public Sidebar(CardLayout cl, JPanel cards){
         setLayout(new GridBagLayout());
 
+        //  HOME BUTTON
         JButton homeBtn = new JButton("Home");
         homeBtn.setFont(Formats.XL_FONT);
         homeBtn.addActionListener(event->cl.show(cards, "home"));
 
-        
+        //  SORTING
         JLabel sortLbl = new JLabel("Sort", SwingConstants.CENTER);
         sortLbl.setFont(Formats.L_FONT);
 
@@ -23,6 +24,7 @@ public class Sidebar extends JPanel {
         sortBtns.add(recent);
         sortBtns.add(popular);
 
+        //  FILTERING
         JLabel filterLbl = new JLabel("Filter", SwingConstants.CENTER);
         filterLbl.setFont(Formats.L_FONT);
 
@@ -31,7 +33,7 @@ public class Sidebar extends JPanel {
         time.setFont(Formats.M_FONT);
         followed.setFont(Formats.M_FONT);
         
-        
+        //  LOGIN BUTTON
         JButton loginBtn = new JButton("Login");
         loginBtn.setFont(Formats.XL_FONT);
         loginBtn.addActionListener(event->cl.show(cards, "loginScreen"));
@@ -42,6 +44,7 @@ public class Sidebar extends JPanel {
         filterLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 
+        //  PLACEMENT (Placing all the components)
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx=0; gbc.gridy=GridBagConstraints.RELATIVE;
         gbc.insets = new Insets(0, 0, 5, 0);
@@ -58,7 +61,8 @@ public class Sidebar extends JPanel {
         add(time, gbc);
         add(followed, gbc);
         
-        gbc.weighty = 1.0; // This is for spacing
+        // This is for spacing
+        gbc.weighty = 1.0; 
         add(new JPanel(), gbc);
         gbc.weighty=0;
         
