@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public class Formats {
+public class Constants {
 	public static final Font XL_FONT = new Font("Arial", Font.BOLD, 48);
     public static final Font L_FONT = new Font("Arial", Font.BOLD, 24);
     public static final Font M_FONT = new Font("Arial", Font.PLAIN, 20);

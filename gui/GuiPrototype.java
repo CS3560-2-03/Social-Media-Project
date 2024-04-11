@@ -81,12 +81,12 @@ public class GuiPrototype {
                 if (event instanceof KeyEvent) {
                     KeyEvent keyEvent = (KeyEvent) event;
                     if (keyEvent.getID() == KeyEvent.KEY_PRESSED) {
-                        if (keyEvent.getKeyCode() == KeyEvent.VK_EQUALS && keyEvent.isControlDown() && zoomLvl < Formats.MAX_ZOOM) {
+                        if (keyEvent.getKeyCode() == KeyEvent.VK_EQUALS && keyEvent.isControlDown() && zoomLvl < Constants.MAX_ZOOM) {
                             zoomLvl++;
                             contentFeed.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
                             changeFontSize(contentFeed, 2);
                             changeFontSize(sidebar, 2);
-                        } else if (keyEvent.getKeyCode() == KeyEvent.VK_MINUS && keyEvent.isControlDown() && zoomLvl > Formats.MIN_ZOOM) {
+                        } else if (keyEvent.getKeyCode() == KeyEvent.VK_MINUS && keyEvent.isControlDown() && zoomLvl > Constants.MIN_ZOOM) {
                             zoomLvl--;
                             contentFeed.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
                             changeFontSize(contentFeed, -2);
@@ -130,20 +130,20 @@ public class GuiPrototype {
         JLabel title = new JLabel("LOREM IPSUM");
         JLabel author = new JLabel("by Cicero"); 
         JLabel content = new JLabel("<html>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In mollis lorem id justo cursus, nec congue purus commodo. Sed ut enim eros. Proin dignissim metus metus, ac tempor sapien blandit quis. Sed ac faucibus nunc. Etiam ullamcorper velit sit amet massa lacinia aliquam. Sed eget fermentum leo, sed maximus libero. Quisque cursus elit turpis, id egestas leo pretium quis.</html>");
-        title.setFont(new Font("Arial", Font.PLAIN, 16+zoomLvl*2));
-        author.setFont(new Font("Arial", Font.PLAIN, 10+zoomLvl*2));
-        content.setFont(new Font("Arial", Font.PLAIN, 12+zoomLvl*2));
+        title.setFont(Constants.L_FONT);
+        author.setFont(Constants.S_FONT);
+        content.setFont(Constants.M_FONT);
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
         author.setAlignmentX(Component.LEFT_ALIGNMENT);
         content.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // innerPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        // innerPanel.addMouseListener(new MouseAdapter() {
-        //     @Override
-        //     public void mouseClicked(MouseEvent e) {
-        //         expandPost();
-        //     }
-        // });
+        innerPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        innerPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                expandPost();
+            }
+        });
 
         innerPanel.add(title);
         innerPanel.add(author);
@@ -152,26 +152,16 @@ public class GuiPrototype {
         contentFeed.revalidate();
     }
 
+    // !!! THIS WILL CAUSE A MEMORY LEAK AT THE MOMENT
+    // because when there is a expandedPost, it just adds it to the global JPanel, 'cards'
+    // however it never deletes the old expandedPost.
+    // Fix later
     private void expandPost(){
-        JPanel postPanel = new JPanel(new FlowLayout());
-        JTextArea title = makeTextArea("LOREM IPSUM");
-        JTextArea author = makeTextArea("by Cicero");
-        JTextArea content = makeTextArea("Lorem ipsum dolor sit amet, consectetur adipiscing elit. In mollis lorem id justo cursus, nec congue purus commodo. Sed ut enim eros. Proin dignissim metus metus, ac tempor sapien blandit quis. Sed ac faucibus nunc. Etiam ullamcorper velit sit amet massa lacinia aliquam. Sed eget fermentum leo, sed maximus libero. Quisque cursus elit turpis, id egestas leo pretium quis.");
-        postPanel.add(title);
-        postPanel.add(author);
-        postPanel.add(content);
+        JScrollPane expandedPost = new JScrollPane(new ExpandedPost(cl, cards));
+        expandedPost.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
         
-        cards.add(postPanel, "expandedPost");
+        cards.add(expandedPost, "expandedPost");
         cl.show(cards, "expandedPost");
-    }
-
-    // Just used in expandPost to avoid repetition
-    private JTextArea makeTextArea(String text){
-        JTextArea textArea = new JTextArea(text);
-        textArea.setWrapStyleWord(true);
-        textArea.setLineWrap(true);
-        textArea.setEditable(false);
-        return textArea;
     }
 
     public static void main(String[] args) {

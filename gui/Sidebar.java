@@ -9,33 +9,33 @@ public class Sidebar extends JPanel {
 
         //  HOME BUTTON
         JButton homeBtn = new JButton("Home");
-        homeBtn.setFont(Formats.XL_FONT);
+        homeBtn.setFont(Constants.XL_FONT);
         homeBtn.addActionListener(event->cl.show(cards, "home"));
 
         //  SORTING
         JLabel sortLbl = new JLabel("Sort", SwingConstants.CENTER);
-        sortLbl.setFont(Formats.L_FONT);
+        sortLbl.setFont(Constants.L_FONT);
 
         ButtonGroup sortBtns = new ButtonGroup();
         JRadioButton recent = new JRadioButton("Recent");
         JRadioButton popular = new JRadioButton("Popular");
-        recent.setFont(Formats.M_FONT);
-        popular.setFont(Formats.M_FONT);
+        recent.setFont(Constants.M_FONT);
+        popular.setFont(Constants.M_FONT);
         sortBtns.add(recent);
         sortBtns.add(popular);
 
         //  FILTERING
         JLabel filterLbl = new JLabel("Filter", SwingConstants.CENTER);
-        filterLbl.setFont(Formats.L_FONT);
+        filterLbl.setFont(Constants.L_FONT);
 
         JCheckBox time = new JCheckBox("Time");
         JCheckBox followed = new JCheckBox("Followed");
-        time.setFont(Formats.M_FONT);
-        followed.setFont(Formats.M_FONT);
+        time.setFont(Constants.M_FONT);
+        followed.setFont(Constants.M_FONT);
         
         //  LOGIN BUTTON
         JButton loginBtn = new JButton("Login");
-        loginBtn.setFont(Formats.XL_FONT);
+        loginBtn.setFont(Constants.XL_FONT);
         loginBtn.addActionListener(event->cl.show(cards, "loginScreen"));
 
         sortLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
