@@ -11,14 +11,12 @@ public class LoginScreen extends JPanel {
     private String ACCOUNTS_FILE = "accounts.csv";
     
     public LoginScreen(CardLayout cl, JPanel cards){
-        int zoomLvl = 4;
-
         setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
 
         JLabel titleLbl = new JLabel("Login");
-        titleLbl.setFont(new Font("Arial", Font.BOLD, 24+zoomLvl*2));
+        titleLbl.setFont(new Font("Arial", Font.BOLD, 32));
         gbc.gridx=0;
         gbc.gridy=GridBagConstraints.RELATIVE;
         gbc.anchor = GridBagConstraints.CENTER;
@@ -26,14 +24,14 @@ public class LoginScreen extends JPanel {
         add(titleLbl, gbc);
 
         JLabel usernameLbl = new JLabel("Username:");
-        usernameLbl.setFont(new Font("Arial", Font.PLAIN, 12+zoomLvl*2));
+        usernameLbl.setFont(new Font("Arial", Font.PLAIN, 20));
         add(usernameLbl, gbc);
 
         JTextField usernameField = new JTextField(16);
         add(usernameField, gbc);
 
         JLabel passwordLbl = new JLabel("Password:");
-        passwordLbl.setFont(new Font("Arial", Font.PLAIN, 12+zoomLvl*2));
+        passwordLbl.setFont(new Font("Arial", Font.PLAIN, 20));
         add(passwordLbl, gbc);
 
         JTextField passwordField = new JTextField(16);
@@ -44,13 +42,13 @@ public class LoginScreen extends JPanel {
         loginBtn.addActionListener(e->validateLogin(usernameField.getText(), passwordField.getText()));
 
         JLabel createAccLbl = new JLabel("<html><div style='text-align: center;'>Don't have an account?<br>Click here to create an account</div></html>");
-        createAccLbl.setFont(new Font("Arial", Font.PLAIN, 8+zoomLvl*2));
+        createAccLbl.setFont(new Font("Arial", Font.PLAIN, 16));
         createAccLbl.setForeground(Color.BLUE);
         createAccLbl.setCursor(new Cursor(Cursor.HAND_CURSOR));
         createAccLbl.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                cl.show(cards, "home");
+                cl.show(cards, "accountCreationScreen");
             }
         });
         add(createAccLbl, gbc);

@@ -31,6 +31,8 @@ public class GuiPrototype {
         setupPostLoading();
 
         setupLoginScreen();
+        JPanel accountCreation = new AccountCreationScreen(cl, cards);
+        cards.add(accountCreation, "accountCreationScreen");
 
         // This sets up a global key listener. Used for zooming in and out with Ctrl+ or Ctrl-
         Toolkit.getDefaultToolkit().addAWTEventListener(new GlobalKeyListener(), AWTEvent.KEY_EVENT_MASK);
