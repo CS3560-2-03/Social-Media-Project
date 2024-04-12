@@ -1,3 +1,5 @@
+package gui;
+
 import javax.swing.JPanel;
 import javax.swing.Scrollable;
 import java.awt.Dimension;
