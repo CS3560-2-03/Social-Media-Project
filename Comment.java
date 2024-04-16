@@ -1,8 +1,11 @@
+import java.time.Instant;
+
 public class Comment {
 	private int commentId;
 	private Account author;
 	private String content;
 	private int votes;
+	private Instant timeStamp;
 
 	public Comment(String author, String content){
 

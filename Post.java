@@ -1,3 +1,4 @@
+import java.time.Instant;
 import java.util.*;
 
 public class Post {
@@ -6,11 +7,12 @@ public class Post {
 	private String textContent;
 	private String embedLink;
 	private int votes;
+	private Instant timeStamp;
 	private Account author;
 	private List<Comment> comments;
 
 	// Create post with no embedded image. Generates a postId
-	public Post(String author, String title, String textContent){
+	public Post(int postID, String author, String title, String textContent, String timeStamp){
 
 	}
 

@@ -2,6 +2,12 @@ package gui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -129,15 +135,22 @@ public class GuiPrototype {
         innerPanel.setBackground(Color.WHITE);
         postPanel.add(innerPanel, BorderLayout.CENTER);
 
+        //Replace Instant.now() with the Instant grabbed from database
+        String timeS = GetDisplayDate(Instant.now().toString());
+
+
         JLabel title = new JLabel("LOREM IPSUM");
         JLabel author = new JLabel("by Cicero"); 
         JLabel content = new JLabel("<html>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In mollis lorem id justo cursus, nec congue purus commodo. Sed ut enim eros. Proin dignissim metus metus, ac tempor sapien blandit quis. Sed ac faucibus nunc. Etiam ullamcorper velit sit amet massa lacinia aliquam. Sed eget fermentum leo, sed maximus libero. Quisque cursus elit turpis, id egestas leo pretium quis.</html>");
+        JLabel time = new JLabel(timeS);
         title.setFont(Constants.L_FONT);
         author.setFont(Constants.S_FONT);
         content.setFont(Constants.M_FONT);
+        time.setFont(Constants.S_FONT);
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
         author.setAlignmentX(Component.LEFT_ALIGNMENT);
         content.setAlignmentX(Component.LEFT_ALIGNMENT);
+        time.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         innerPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         innerPanel.addMouseListener(new MouseAdapter() {
@@ -150,8 +163,27 @@ public class GuiPrototype {
         innerPanel.add(title);
         innerPanel.add(author);
         innerPanel.add(content);
+        innerPanel.add(time);
         contentFeed.add(postPanel);
         contentFeed.revalidate();
+    }
+
+
+    private String GetDisplayDate(String input) {
+        //Changes instant string into a displayable format.
+        //(not necessary if we don't include time in UI)
+        Instant instant;
+        LocalDateTime timeStamp;
+        try {
+            instant = Instant.parse(input);
+            timeStamp = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+        } catch (DateTimeParseException e) {
+            System.out.println("Error parsing dateTime");
+            return "Error";
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a MMMM dd, yyyy");
+        return timeStamp.format(formatter);
     }
 
     // !!! THIS WILL CAUSE A MEMORY LEAK AT THE MOMENT
