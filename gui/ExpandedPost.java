@@ -22,6 +22,28 @@ public class ExpandedPost extends ScrollablePanel {
         add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
         add(content, gbc);
         add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
+
+        JPanel utilityBar = new JPanel(new BorderLayout());
+        utilityBar.setBackground(Color.WHITE);
+
+        JLabel date = new JLabel("1 January 2024");
+        date.setFont(Constants.S_FONT);
+        utilityBar.add(date, BorderLayout.WEST);
+
+        JPanel voteBlock = new JPanel();
+        voteBlock.setBackground(Color.WHITE);
+
+        voteBlock.add(new JLabel(new ImageIcon(getClass().getResource("uparrow.png"))));
+
+        JLabel voteText = new JLabel("47");
+        voteText.setFont(Constants.S_FONT);
+        voteBlock.add(voteText);
+
+        voteBlock.add(new JLabel(new ImageIcon(getClass().getResource("downarrow.png"))));
+
+        utilityBar.add(voteBlock, BorderLayout.EAST);
+
+        add(utilityBar, gbc);
     }
 
     private JTextPane makeTextPane(String text, Font font){

@@ -83,6 +83,7 @@ public class GuiPrototype {
     }
 
     // This is a global key listener. It's used for detecting Ctrl+ and Ctrl- for zooming.
+    // Maybe make this its own public file in the future so it can be used across classes
     private class GlobalKeyListener implements AWTEventListener {
             @Override
             public void eventDispatched(AWTEvent event) {
@@ -105,6 +106,7 @@ public class GuiPrototype {
             }
         }
 
+    // Maybe just refactor and put this into GlobalKeyListener 
     // Takes a component and amount.
     // Goes through every subcomponent and increases the font size of JLabels or JButtons
     private void changeFontSize(Container container, int amount) {
