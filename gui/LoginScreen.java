@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
+import java.sql.*;
 
 
 public class LoginScreen extends JPanel {
@@ -51,10 +52,44 @@ public class LoginScreen extends JPanel {
         add(createAccLbl, gbc);
     }
 
-    // At the moment (4/9 8PM) just returns true if username/password matches one in accounts.csv
-    private boolean validateLogin(String username, String password){
-        boolean result = (username.equals("abc") && password.equals("123"));
-        System.out.println(result);
-        return result;
+   /*
+     * BAREBONES LOGIN METHOD
+     * As of 4,17, this method only checks Accounts database if user inputted information can be found 
+     * Does not actually "log in" the user
+     */
+    private void validateLogin(String username, String password){
+        Connection c = null;
+        PreparedStatement preparedStmt = null;
+        ResultSet results = null;
+
+        try {
+            c = AccountCreationScreen.connectToDatabase();
+
+            //SQLite command
+            String query = "SELECT * FROM account WHERE username LIKE ? AND password LIKE ?;";
+
+            //Set attributes username and password into the SQLite command
+            preparedStmt = c.prepareStatement(query);
+            preparedStmt.setString(1, username);
+            preparedStmt.setString(2, password);
+
+            //Execute the SQLite command
+            results = preparedStmt.executeQuery();
+
+            //If user-inputted information can be found in Accounts database
+            if (results.next()) {
+                JOptionPane.showMessageDialog(null, "Successfully logged in!");
+            }
+            //If information cannot be found in database
+            else {
+                JOptionPane.showMessageDialog(null, "Incorrect login credentials.");
+            }
+
+        //If, for whatever reason, something happens when trying to execute the SQL command
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Error logging into accont.");
+
+            //...
+        }
     }
 }
