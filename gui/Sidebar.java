@@ -6,9 +6,16 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 public class Sidebar extends JPanel {
+    private JButton loginBtn;
+    private CardLayout cl;
+    private JPanel cards;
+    
     public Sidebar(CardLayout cl, JPanel cards){
         setLayout(new GridBagLayout());
 
+        this.cl = cl;
+        this.cards = cards;
+        
         //  HOME BUTTON
         JButton homeBtn = new JButton("Home");
         homeBtn.setFont(Constants.XL_FONT);
@@ -36,7 +43,7 @@ public class Sidebar extends JPanel {
         followed.setFont(Constants.M_FONT);
         
         //  LOGIN BUTTON
-        JButton loginBtn = new JButton("Login");
+        loginBtn = new JButton("Login");
         loginBtn.setFont(Constants.XL_FONT);
         loginBtn.addActionListener(event->cl.show(cards, "loginScreen"));
 
@@ -69,5 +76,13 @@ public class Sidebar extends JPanel {
         gbc.weighty=0;
         
         add(loginBtn, gbc);
+    }
+
+    public void showUserProfileBtn(){
+        loginBtn.setText("User Profile");
+        loginBtn.removeActionListener(loginBtn.getActionListeners()[0]);
+        cl.show(cards, "home");
+        loginBtn.addActionListener(event -> cl.show(cards, "userProfile"));
+
     }
 }
