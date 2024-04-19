@@ -144,21 +144,18 @@ public class GuiPrototype {
         postPanel.add(innerPanel, BorderLayout.CENTER);
 
         //Replace Instant.now() with the Instant grabbed from database
-        String timeS = GetDisplayDate(Instant.now().toString());
-
 
         JLabel title = new JLabel("LOREM IPSUM");
         JLabel author = new JLabel("by Cicero"); 
         JLabel content = new JLabel("<html>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In mollis lorem id justo cursus, nec congue purus commodo. Sed ut enim eros. Proin dignissim metus metus, ac tempor sapien blandit quis. Sed ac faucibus nunc. Etiam ullamcorper velit sit amet massa lacinia aliquam. Sed eget fermentum leo, sed maximus libero. Quisque cursus elit turpis, id egestas leo pretium quis.</html>");
-        JLabel time = new JLabel(timeS);
         title.setFont(Constants.L_FONT);
         author.setFont(Constants.S_FONT);
         content.setFont(Constants.M_FONT);
-        time.setFont(Constants.S_FONT);
+
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
         author.setAlignmentX(Component.LEFT_ALIGNMENT);
         content.setAlignmentX(Component.LEFT_ALIGNMENT);
-        time.setAlignmentX(Component.LEFT_ALIGNMENT);
+
 
         innerPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         innerPanel.addMouseListener(new MouseAdapter() {
@@ -171,7 +168,6 @@ public class GuiPrototype {
         innerPanel.add(title);
         innerPanel.add(author);
         innerPanel.add(content);
-        innerPanel.add(time);
         contentFeed.add(postPanel);
         contentFeed.revalidate();
     }

@@ -3,6 +3,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 public class SQLiteHandler {
 
@@ -16,9 +17,11 @@ public class SQLiteHandler {
 
 
     public void startConnection() {
+        //Try checking for needed sqlite drivers
         try {
             Class.forName("org.sqlite.JDBC");
 
+            //If that didn't give an error, try to connect to file
             try {
                 Connection conn = DriverManager.getConnection(url);
                 statement = conn.createStatement();
@@ -37,6 +40,7 @@ public class SQLiteHandler {
 
     }
 
+    //endConnection should be called before exiting!
     public void endConnection() {
         try {
             if(conn != null) {
@@ -45,6 +49,36 @@ public class SQLiteHandler {
         } catch(Exception e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    public ResultSet getPosts(int limit) {
+        try {
+            String query = "SELECT * FROM post ORDER BY timeStamp DESC LIMIT " + limit + ";";
+
+            result = statement.executeQuery(query);
+            return result;
+        } catch(Exception ex) {
+            System.out.println("Failed to getPosts: " + ex.getMessage());
+        }
+
+        return null;
+    }
+
+    public Post createPost(ResultSet retrived) {
+        try {
+            int id = result.getInt("postID");
+            int accountID = result.getInt("accountID");
+            String title = result.getString("title");
+            String textContent = result.getString("textContent");
+            int votes = result.getInt("votes");
+            String timeStamp = result.getString("timeStamp");
+            Post newPost = new Post(id, accountID, title, textContent, votes, timeStamp);
+            return newPost;
+        } catch(Exception ex) {
+            System.out.println("Unable to create post instance from ResultSet given: " + ex.getMessage());
+        }
+
+        return null;
     }
 
     /*

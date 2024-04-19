@@ -12,7 +12,7 @@ public class Post {
 	private List<Comment> comments;
 
 	// Create post with no embedded image. Generates a postId
-	public Post(int postID, String author, String title, String textContent, String timeStamp){
+	public Post(int postID, int authorID, String title, String textContent, int votes, String timeStamp){
 
 	}
 
@@ -39,6 +39,10 @@ public class Post {
 	// Embed link cannot be edited, only removed
 	public void removeEmbed(){
 		
+	}
+
+	public int getPostId() {
+		return postId;
 	}
 
 	public int getVotes(){
