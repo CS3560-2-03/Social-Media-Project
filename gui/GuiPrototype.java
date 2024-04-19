@@ -33,7 +33,13 @@ public class GuiPrototype {
         setupContentFeed(frame);
         setupPostLoading();
 
-        JPanel card = new LoginScreen(cl, cards);
+        sidebar = new Sidebar(cl, cards);
+        frame.add(sidebar, BorderLayout.WEST);
+
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        JPanel card = new LoginScreen(cl, cards, (Sidebar)sidebar);
         cards.add(card, "loginScreen");
         JPanel accountCreation = new AccountCreationScreen(cl, cards);
         cards.add(accountCreation, "accountCreationScreen");
@@ -45,11 +51,8 @@ public class GuiPrototype {
         cl.show(cards, "home");
         frame.add(cards, BorderLayout.CENTER);
 
-        sidebar = new Sidebar(cl, cards);
-        frame.add(sidebar, BorderLayout.WEST);
-
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        JPanel userProfile = new UserProfileScreen(cl, cards);
+        cards.add(userProfile, "userProfile");
     }
 
     // Creates content feed area
