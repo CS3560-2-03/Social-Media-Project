@@ -8,11 +8,14 @@ import java.sql.*;
 
 
 public class LoginScreen extends JPanel {
-    public LoginScreen(CardLayout cl, JPanel cards){
+    private Sidebar sidebar;
+    public LoginScreen(CardLayout cl, JPanel cards, Sidebar sidebar){
         setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
 
+        this.sidebar = sidebar;
+        
         JLabel titleLbl = new JLabel("Login");
         titleLbl.setFont(new Font("Arial", Font.BOLD, 32));
         gbc.gridx=0;
@@ -56,6 +59,7 @@ public class LoginScreen extends JPanel {
      * BAREBONES LOGIN METHOD
      * As of 4,17, this method only checks Accounts database if user inputted information can be found 
      * Does not actually "log in" the user
+     * 4/18, "should" login user
      */
     private void validateLogin(String username, String password){
         Connection c = null;
@@ -79,6 +83,7 @@ public class LoginScreen extends JPanel {
             //If user-inputted information can be found in Accounts database
             if (results.next()) {
                 JOptionPane.showMessageDialog(null, "Successfully logged in!");
+                sidebar.showUserProfileBtn();
             }
             //If information cannot be found in database
             else {
@@ -87,7 +92,7 @@ public class LoginScreen extends JPanel {
 
         //If, for whatever reason, something happens when trying to execute the SQL command
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error logging into accont.");
+            JOptionPane.showMessageDialog(null, "Error logging into account.");
 
             //...
         }
