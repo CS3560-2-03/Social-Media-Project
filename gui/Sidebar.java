@@ -21,6 +21,11 @@ public class Sidebar extends JPanel {
         homeBtn.setFont(Constants.XL_FONT);
         homeBtn.addActionListener(event->cl.show(cards, "home"));
 
+        // CREATE POST
+        JButton postBtn = new JButton("Post");
+        postBtn.setFont(Constants.XL_FONT);
+        postBtn.addActionListener(event->cl.show(cards, "postCreationScreen"));
+
         //  SORTING
         JLabel sortLbl = new JLabel("Sort", SwingConstants.CENTER);
         sortLbl.setFont(Constants.L_FONT);
@@ -56,10 +61,11 @@ public class Sidebar extends JPanel {
         //  PLACEMENT (Placing all the components)
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx=0; gbc.gridy=GridBagConstraints.RELATIVE;
-        gbc.insets = new Insets(0, 0, 5, 0);
+        gbc.insets = new Insets(0, 0, 0, 0);
         gbc.fill=GridBagConstraints.HORIZONTAL;
         
         add(homeBtn, gbc);
+        add(postBtn, gbc);
         add(Box.createRigidArea(new Dimension(0, 10)), gbc);
         add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
         add(sortLbl, gbc);

@@ -46,6 +46,14 @@ public class AccountCreationScreen extends JPanel {
         passwordField.setToolTipText("TEMP TOOLTIP TEXT");
         add(passwordField, gbc);
 
+        JLabel displayNameLbl = new JLabel("Desired Display Name:");
+        displayNameLbl.setFont(new Font("Arial", Font.PLAIN, 20));
+        add(displayNameLbl, gbc);
+
+        JTextField displayNameField = new JTextField(16);
+        displayNameField.setToolTipText("TEMP TOOLTIP TEXT");
+        add(displayNameField, gbc);
+
         JButton loginBtn = new JButton("Create Account");
         add(loginBtn, gbc);
         loginBtn.addActionListener(e->validateAccount(usernameField.getText(), passwordField.getText()));
