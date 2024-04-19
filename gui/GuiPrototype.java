@@ -33,10 +33,19 @@ public class GuiPrototype {
         setupContentFeed(frame);
         setupPostLoading();
 
-        JPanel card = new LoginScreen(cl, cards);
-        cards.add(card, "loginScreen");
+        sidebar = new Sidebar(cl, cards);
+        frame.add(sidebar, BorderLayout.WEST);
+
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        JPanel loginCard = new LoginScreen(cl, cards, (Sidebar)sidebar);
+        cards.add(loginCard, "loginScreen");
         JPanel accountCreation = new AccountCreationScreen(cl, cards);
         cards.add(accountCreation, "accountCreationScreen");
+        JScrollPane postCreation = new JScrollPane(new PostCreation(cl, cards));
+        postCreation.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
+        cards.add(postCreation, "postCreationScreen");
 
         // This sets up a global key listener. Used for zooming in and out with Ctrl+ or Ctrl-
         Toolkit.getDefaultToolkit().addAWTEventListener(new GlobalKeyListener(), AWTEvent.KEY_EVENT_MASK);
@@ -45,11 +54,8 @@ public class GuiPrototype {
         cl.show(cards, "home");
         frame.add(cards, BorderLayout.CENTER);
 
-        sidebar = new Sidebar(cl, cards);
-        frame.add(sidebar, BorderLayout.WEST);
-
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        JPanel userProfile = new UserProfileScreen(cl, cards);
+        cards.add(userProfile, "userProfile");
     }
 
     // Creates content feed area

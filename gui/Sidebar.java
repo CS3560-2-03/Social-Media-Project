@@ -6,13 +6,25 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 public class Sidebar extends JPanel {
+    private JButton loginBtn;
+    private CardLayout cl;
+    private JPanel cards;
+    
     public Sidebar(CardLayout cl, JPanel cards){
         setLayout(new GridBagLayout());
 
+        this.cl = cl;
+        this.cards = cards;
+        
         //  HOME BUTTON
         JButton homeBtn = new JButton("Home");
         homeBtn.setFont(Constants.XL_FONT);
         homeBtn.addActionListener(event->cl.show(cards, "home"));
+
+        // CREATE POST
+        JButton postBtn = new JButton("Post");
+        postBtn.setFont(Constants.XL_FONT);
+        postBtn.addActionListener(event->cl.show(cards, "postCreationScreen"));
 
         //  SORTING
         JLabel sortLbl = new JLabel("Sort", SwingConstants.CENTER);
@@ -36,7 +48,7 @@ public class Sidebar extends JPanel {
         followed.setFont(Constants.M_FONT);
         
         //  LOGIN BUTTON
-        JButton loginBtn = new JButton("Login");
+        loginBtn = new JButton("Login");
         loginBtn.setFont(Constants.XL_FONT);
         loginBtn.addActionListener(event->cl.show(cards, "loginScreen"));
 
@@ -49,10 +61,11 @@ public class Sidebar extends JPanel {
         //  PLACEMENT (Placing all the components)
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx=0; gbc.gridy=GridBagConstraints.RELATIVE;
-        gbc.insets = new Insets(0, 0, 5, 0);
+        gbc.insets = new Insets(0, 0, 0, 0);
         gbc.fill=GridBagConstraints.HORIZONTAL;
         
         add(homeBtn, gbc);
+        add(postBtn, gbc);
         add(Box.createRigidArea(new Dimension(0, 10)), gbc);
         add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
         add(sortLbl, gbc);
@@ -69,5 +82,13 @@ public class Sidebar extends JPanel {
         gbc.weighty=0;
         
         add(loginBtn, gbc);
+    }
+
+    public void showUserProfileBtn(){
+        loginBtn.setText("User Profile");
+        loginBtn.removeActionListener(loginBtn.getActionListeners()[0]);
+        cl.show(cards, "home");
+        loginBtn.addActionListener(event -> cl.show(cards, "userProfile"));
+
     }
 }

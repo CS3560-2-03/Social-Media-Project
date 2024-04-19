@@ -1,3 +1,4 @@
+import java.sql.*;
 import java.util.*;
 
 public class Account {
@@ -13,6 +14,27 @@ public class Account {
 		this.password = password;
 	}
 
+
+	//Connects to databases needed for program to function
+	//If unable to connect to database, return null and print error message in console
+	public static Connection connectToDatabase() {
+		Connection c = null;
+
+		try {
+			String url = "jdbc:sqlite:database/main.db";
+
+			//Try to connect to our databases
+			c = DriverManager.getConnection(url);
+
+			System.out.println("Connection to database was successful.");
+
+			return c;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+	
 	/* Allows user to create a post. 
 		Once created, it is added to postHistory.
 		It is also added to the PostManager object
