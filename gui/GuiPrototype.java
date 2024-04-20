@@ -165,9 +165,21 @@ public class GuiPrototype {
             }
         });
 
+        JLabel date = new JLabel("1 January 2024");
+        JLabel votes = new JLabel("47");
+        date.setFont(Constants.S_FONT);
+        votes.setFont(Constants.S_FONT);
+
+        JPanel utilityBar = new JPanel(new BorderLayout());
+        utilityBar.setBackground(Color.WHITE);
+        utilityBar.add(new JSeparator(SwingConstants.HORIZONTAL), BorderLayout.NORTH);
+        utilityBar.add(date, BorderLayout.CENTER);
+        utilityBar.add(votes, BorderLayout.EAST);
+
         innerPanel.add(title);
         innerPanel.add(author);
         innerPanel.add(content);
+        postPanel.add(utilityBar, BorderLayout.SOUTH);
         contentFeed.add(postPanel);
         contentFeed.revalidate();
     }
