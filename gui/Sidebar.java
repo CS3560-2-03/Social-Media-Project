@@ -42,10 +42,23 @@ public class Sidebar extends JPanel {
         JLabel filterLbl = new JLabel("Filter", SwingConstants.CENTER);
         filterLbl.setFont(Constants.L_FONT);
 
-        JCheckBox time = new JCheckBox("Time");
-        JCheckBox followed = new JCheckBox("Followed");
-        time.setFont(Constants.M_FONT);
-        followed.setFont(Constants.M_FONT);
+        JPanel timePanel = new JPanel(new BorderLayout());
+        JCheckBox timeBtn = new JCheckBox("Time (Days):");
+        timeBtn.setFont(Constants.M_FONT);
+        JTextField timeArea = new JTextField(3);
+        timeArea.setFont(Constants.S_FONT);
+        timePanel.add(timeBtn, BorderLayout.WEST);
+        timePanel.add(timeArea, BorderLayout.EAST);
+        
+        JCheckBox followedBtn = new JCheckBox("Followed");
+        followedBtn.setFont(Constants.M_FONT);
+        
+        
+        
+        //  FOLLOWING
+        JLabel followingLbl = new JLabel("Following", SwingConstants.CENTER);
+        followingLbl.setFont(Constants.L_FONT);
+        
         
         //  LOGIN BUTTON
         loginBtn = new JButton("Login");
@@ -56,12 +69,13 @@ public class Sidebar extends JPanel {
         homeBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         loginBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         filterLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
+        followingLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 
         //  PLACEMENT (Placing all the components)
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx=0; gbc.gridy=GridBagConstraints.RELATIVE;
-        gbc.insets = new Insets(0, 0, 0, 0);
+        //gbc.insets = new Insets(0, 0, 0, 0);
         gbc.fill=GridBagConstraints.HORIZONTAL;
         
         add(homeBtn, gbc);
@@ -73,8 +87,16 @@ public class Sidebar extends JPanel {
         add(popular, gbc);
         add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
         add(filterLbl, gbc);
-        add(time, gbc);
-        add(followed, gbc);
+        add(timePanel, gbc);
+        add(followedBtn, gbc);
+        add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
+        add(followingLbl, gbc);
+        
+        JLabel tempFollowing = new JLabel("Yuu Kamiya");
+        tempFollowing.setOpaque(true);
+        tempFollowing.setBackground(Color.WHITE);
+        tempFollowing.setFont(Constants.M_FONT);
+        add(tempFollowing, gbc);
         
         // This is for spacing
         gbc.weighty = 1.0; 
@@ -85,7 +107,7 @@ public class Sidebar extends JPanel {
     }
 
     public void showUserProfileBtn(){
-        loginBtn.setText("User Profile");
+        loginBtn.setText("Profile");
         loginBtn.removeActionListener(loginBtn.getActionListeners()[0]);
         cl.show(cards, "home");
         loginBtn.addActionListener(event -> cl.show(cards, "userProfile"));
