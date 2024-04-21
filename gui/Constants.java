@@ -9,4 +9,6 @@ public class Constants {
     public static final Font S_FONT = new Font("Arial", Font.PLAIN, 16);
     public static final int MAX_ZOOM = 12;
     public static final int MIN_ZOOM = 0;
+    public static final int UP = 1;
+    public static final int DOWN = 3;
 }

@@ -34,12 +34,15 @@ public class ExpandedPost extends ScrollablePanel {
 
         JPanel voteBlock = new JPanel();
         voteBlock.setBackground(Color.WHITE);
-        voteBlock.add(new JLabel(new ImageIcon(getClass().getResource("uparrow.png"))));
-
         JLabel voteText = new JLabel("47");
         voteText.setFont(Constants.S_FONT);
+        VoteArrow upvote = new VoteArrow(Constants.UP);
+        VoteArrow downvote = new VoteArrow(Constants.DOWN);
+        upvote.setPair(downvote);
+        
+        voteBlock.add(upvote);
         voteBlock.add(voteText);
-        voteBlock.add(new JLabel(new ImageIcon(getClass().getResource("downarrow.png"))));
+        voteBlock.add(downvote);
 
         utilityBar.add(voteBlock, BorderLayout.WEST);
         add(utilityBar, gbc);
