@@ -38,12 +38,15 @@ public class CommentBlock extends JPanel {
 
         JPanel voteBlock = new JPanel();
         voteBlock.setBackground(Color.WHITE);
-        voteBlock.add(new VoteArrow(Constants.UP));
-
         JLabel voteText = new JLabel("47");
         voteText.setFont(Constants.S_FONT);
+        VoteArrow upvote = new VoteArrow(Constants.UP);
+        VoteArrow downvote = new VoteArrow(Constants.DOWN);
+        upvote.setPair(downvote);
+        
+        voteBlock.add(upvote);
         voteBlock.add(voteText);
-        voteBlock.add(new VoteArrow(Constants.DOWN));
+        voteBlock.add(downvote);
 
         utilityBar.add(voteBlock, BorderLayout.WEST);
         add(utilityBar, gbc);
