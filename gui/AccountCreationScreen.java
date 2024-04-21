@@ -13,7 +13,10 @@ import java.sql.*;
 public class AccountCreationScreen extends JPanel {
     private String ACCOUNTS_FILE = "accounts.csv";
     
-    public AccountCreationScreen(CardLayout cl, JPanel cards){
+    public AccountCreationScreen(){
+    	CardLayout cl = CardManager.cardLayout;
+    	JPanel cards = CardManager.cards;
+    	
         // This makes tooltips appear faster
         ToolTipManager.sharedInstance().setInitialDelay(100);
 

@@ -6,7 +6,10 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 public class PostCreation extends ScrollablePanel {
-    public PostCreation(CardLayout cl, JPanel cards){
+    public PostCreation(){
+    	CardLayout cl = CardManager.cardLayout;
+    	JPanel cards = CardManager.cards;
+    	
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx=0; gbc.gridy=GridBagConstraints.RELATIVE;

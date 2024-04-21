@@ -21,8 +21,8 @@ public class GuiPrototype {
     
     public GuiPrototype(){
         zoomLvl = 4;
-        cl = new CardLayout();
-        cards = new JPanel(cl);
+        cl = CardManager.cardLayout;
+        cards = CardManager.cards;
 
         JFrame frame = new JFrame("UI Test");
         frame.setLayout(new BorderLayout());
@@ -33,17 +33,17 @@ public class GuiPrototype {
         setupContentFeed(frame);
         setupPostLoading();
 
-        sidebar = new Sidebar(cl, cards);
+        sidebar = new Sidebar();
         frame.add(sidebar, BorderLayout.WEST);
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-        JPanel loginCard = new LoginScreen(cl, cards, (Sidebar)sidebar);
+        JPanel loginCard = new LoginScreen((Sidebar)sidebar);
         cards.add(loginCard, "loginScreen");
-        JPanel accountCreation = new AccountCreationScreen(cl, cards);
+        JPanel accountCreation = new AccountCreationScreen();
         cards.add(accountCreation, "accountCreationScreen");
-        JScrollPane postCreation = new JScrollPane(new PostCreation(cl, cards));
+        JScrollPane postCreation = new JScrollPane(new PostCreation());
         postCreation.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
         cards.add(postCreation, "postCreationScreen");
 
@@ -54,7 +54,7 @@ public class GuiPrototype {
         cl.show(cards, "home");
         frame.add(cards, BorderLayout.CENTER);
 
-        JPanel userProfile = new UserProfileScreen(cl, cards);
+        JPanel userProfile = new UserProfileScreen();
         cards.add(userProfile, "userProfile");
     }
 
@@ -134,52 +134,7 @@ public class GuiPrototype {
     }
 
     private void createPost() {
-        JPanel postPanel = new JPanel(new BorderLayout());
-        postPanel.setBorder(new EmptyBorder(10, 0, 10, 0)); // Insets: top, left, bottom, right
-
-        // This exists so the insets aren't colored in
-        JPanel innerPanel = new JPanel();
-        innerPanel.setLayout(new BoxLayout(innerPanel, BoxLayout.Y_AXIS));
-        innerPanel.setBackground(Color.WHITE);
-        postPanel.add(innerPanel, BorderLayout.CENTER);
-
-        //Replace Instant.now() with the Instant grabbed from database
-
-        JLabel title = new JLabel("LOREM IPSUM");
-        JLabel author = new JLabel("by Cicero"); 
-        JLabel content = new JLabel("<html>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In mollis lorem id justo cursus, nec congue purus commodo. Sed ut enim eros. Proin dignissim metus metus, ac tempor sapien blandit quis. Sed ac faucibus nunc. Etiam ullamcorper velit sit amet massa lacinia aliquam. Sed eget fermentum leo, sed maximus libero. Quisque cursus elit turpis, id egestas leo pretium quis.</html>");
-        title.setFont(Constants.L_FONT);
-        author.setFont(Constants.S_FONT);
-        content.setFont(Constants.M_FONT);
-
-        title.setAlignmentX(Component.LEFT_ALIGNMENT);
-        author.setAlignmentX(Component.LEFT_ALIGNMENT);
-        content.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-
-        innerPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        innerPanel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                expandPost();
-            }
-        });
-
-        JLabel date = new JLabel("1 January 2024");
-        JLabel votes = new JLabel("47");
-        date.setFont(Constants.S_FONT);
-        votes.setFont(Constants.S_FONT);
-
-        JPanel utilityBar = new JPanel(new BorderLayout());
-        utilityBar.setBackground(Color.WHITE);
-        utilityBar.add(new JSeparator(SwingConstants.HORIZONTAL), BorderLayout.NORTH);
-        utilityBar.add(date, BorderLayout.CENTER);
-        utilityBar.add(votes, BorderLayout.EAST);
-
-        innerPanel.add(title);
-        innerPanel.add(author);
-        innerPanel.add(content);
-        postPanel.add(utilityBar, BorderLayout.SOUTH);
+        JPanel postPanel = new FeedPost(cl, cards);
         contentFeed.add(postPanel);
         contentFeed.revalidate();
     }
@@ -202,17 +157,6 @@ public class GuiPrototype {
         return timeStamp.format(formatter);
     }
 
-    // !!! THIS WILL CAUSE A MEMORY LEAK AT THE MOMENT
-    // because when there is a expandedPost, it just adds it to the global JPanel, 'cards'
-    // however it never deletes the old expandedPost.
-    // Fix later
-    private void expandPost(){
-        JScrollPane expandedPost = new JScrollPane(new ExpandedPost(cl, cards));
-        expandedPost.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
-        
-        cards.add(expandedPost, "expandedPost");
-        cl.show(cards, "expandedPost");
-    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(()->new GuiPrototype());

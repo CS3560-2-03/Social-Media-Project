@@ -8,7 +8,10 @@ public class UserProfileScreen extends JPanel {
     private JTextField usernameField;
     private JTextField passwordField;
 
-    public UserProfileScreen(CardLayout cl, JPanel cards){
+    public UserProfileScreen(){
+    	CardLayout cl = CardManager.cardLayout;
+    	JPanel cards = CardManager.cards;
+    	
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 

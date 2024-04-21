@@ -7,14 +7,12 @@ import javax.swing.border.*;
 
 public class Sidebar extends JPanel {
     private JButton loginBtn;
-    private CardLayout cl;
-    private JPanel cards;
     
-    public Sidebar(CardLayout cl, JPanel cards){
+    public Sidebar(){
+    	CardLayout cl = CardManager.cardLayout;
+    	JPanel cards = CardManager.cards;
+    	
         setLayout(new GridBagLayout());
-
-        this.cl = cl;
-        this.cards = cards;
         
         //  HOME BUTTON
         JButton homeBtn = new JButton("Home");
@@ -107,6 +105,8 @@ public class Sidebar extends JPanel {
     }
 
     public void showUserProfileBtn(){
+    	CardLayout cl = CardManager.cardLayout;
+    	JPanel cards = CardManager.cards;
         loginBtn.setText("Profile");
         loginBtn.removeActionListener(loginBtn.getActionListeners()[0]);
         cl.show(cards, "home");

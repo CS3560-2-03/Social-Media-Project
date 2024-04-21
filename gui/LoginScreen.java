@@ -9,7 +9,7 @@ import java.sql.*;
 
 public class LoginScreen extends JPanel {
     private Sidebar sidebar;
-    public LoginScreen(CardLayout cl, JPanel cards, Sidebar sidebar){
+    public LoginScreen(Sidebar sidebar){
         setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -49,7 +49,7 @@ public class LoginScreen extends JPanel {
         createAccLbl.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                cl.show(cards, "accountCreationScreen");
+            	CardManager.cardLayout.show(CardManager.cards, "accountCreationScreen");
             }
         });
         add(createAccLbl, gbc);
