@@ -38,7 +38,7 @@ public class AccountCreationScreen extends JPanel {
         add(usernameLbl, gbc);
 
         JTextField usernameField = new JTextField(16);
-        usernameField.setToolTipText("TEMP TOOLTIP TEXT");
+        usernameField.setToolTipText("Enter username here");
         add(usernameField, gbc);
 
         JLabel passwordLbl = new JLabel("Desired Password:");
@@ -46,7 +46,7 @@ public class AccountCreationScreen extends JPanel {
         add(passwordLbl, gbc);
 
         JTextField passwordField = new JTextField(16);
-        passwordField.setToolTipText("TEMP TOOLTIP TEXT");
+        passwordField.setToolTipText("Enter password here");
         add(passwordField, gbc);
 
         JLabel displayNameLbl = new JLabel("Desired Display Name:");
@@ -54,21 +54,14 @@ public class AccountCreationScreen extends JPanel {
         add(displayNameLbl, gbc);
 
         JTextField displayNameField = new JTextField(16);
-        displayNameField.setToolTipText("TEMP TOOLTIP TEXT");
+        displayNameField.setToolTipText("Enter display name here");
         add(displayNameField, gbc);
 
         JButton loginBtn = new JButton("Create Account");
         add(loginBtn, gbc);
-        loginBtn.addActionListener(e->validateAccount(usernameField.getText(), passwordField.getText()));
+        loginBtn.addActionListener(e->validateAccount(usernameField.getText(), passwordField.getText(), displayNameField.getText()));
     }
 
-    /*
-     * ************************************
-     * NEED TEXTFIELD FOR DISPLAY NAME?????
-     * If not using displayName column in accounts.db, delete it.
-     * Creating a new account via this program makes the account's displayValue value null
-     * ************************************
-    */
     
     //Connects to databases needed for program to function
 	//If unable to connect to database, return null and print error message in console
@@ -92,13 +85,13 @@ public class AccountCreationScreen extends JPanel {
 
 
     //Create account with user's inputted information
-    private void validateAccount(String username, String password){
+    private void validateAccount(String username, String password, String displayName){
         //Variable to connect to Account database
         Connection c = null;
 
         //Used to execute SQLite commands
         PreparedStatement preparedStmt = null;
-        String query = "INSERT INTO account(username, password) VALUES(?,?)";
+        String query = "INSERT INTO account(username, password, displayName) VALUES(?,?,?)";
 
         try {
             c = connectToDatabase();
@@ -111,6 +104,8 @@ public class AccountCreationScreen extends JPanel {
             preparedStmt.setString(1, username);
             //Refers to second ? in the query
             preparedStmt.setString(2, password);
+             //Refers to third ? in the query
+             preparedStmt.setString(3, displayName);
 
             //Execute the actual query
             preparedStmt.executeUpdate();
