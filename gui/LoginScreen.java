@@ -82,12 +82,16 @@ public class LoginScreen extends JPanel {
 
             //If user-inputted information can be found in Accounts database
             if (results.next()) {
+                int userID = results.getInt("accountID");
+                UserProfileScreen.setInfo(userID);
                 JOptionPane.showMessageDialog(null, "Successfully logged in!");
                 sidebar.showUserProfileBtn();
+                c.close();
             }
             //If information cannot be found in database
             else {
                 JOptionPane.showMessageDialog(null, "Incorrect login credentials.");
+                c.close();
             }
 
         //If, for whatever reason, something happens when trying to execute the SQL command
