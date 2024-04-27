@@ -5,6 +5,7 @@ import java.util.*;
 
 public class Post {
 	private int postId;
+	private int authorId;
 	private String title;
 	private String textContent;
 	private String embedLink;
@@ -14,14 +15,22 @@ public class Post {
 	private List<Comment> comments;
 
 	// Create post with no embedded image. Generates a postId
-	public Post(int postID, int authorID, String title, String textContent, int votes, String timeStamp){
+	public Post(int postId, int authorId, String title, String textContent, int votes, String timeStamp){
+		this.postId = postId;
+		this.authorId = authorId;
+		this.title = title;
+		this.textContent = textContent;
+		this.votes = votes;
+		try {
+			this.timeStamp = Instant.parse(timeStamp);
+		} catch(Exception ex) {
+			System.out.println("For Post " + postId  + ": unable to parse timeStamp: " + ex.getMessage());
+			this.timeStamp = Instant.now();
+		}
 
 	}
 
-	// Create post with embedded image. Generates a postId
-	public Post(String author, String title, String textContent, String embedLink){
 
-	}
 
 	// Expands post, displaying full content and comments
 	public void expand(){
@@ -48,12 +57,12 @@ public class Post {
 	}
 
 	public int getVotes(){
-		return 0;
+		return votes;
 	}
 	// votes has no setter because it should only be modified by upvote() or downvote()
 
 	public String getTextContent(){
-		return null;
+		return textContent;
 	}
 
 	public void setTextContent(String content){
@@ -61,18 +70,28 @@ public class Post {
 	}
 
 	public String getTitle(){
-		return null;
+		return title;
 	}
 
 	public void setTitle(String title){
 
 	}
 
+	public String getTimeStamp() { return timeStamp.toString(); }
+
 	public String getEmbedLink(){
 		return null;
 	}
 
 	public Account getAuthor(){
+		if(author == null) {
+			return new Account(-1, "user", "pass", "fakeUser");
+		}
+
 		return author;
+	}
+
+	public void setAuthor(Account account) {
+		this.author = account;
 	}
 }

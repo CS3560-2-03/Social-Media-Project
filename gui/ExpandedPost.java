@@ -1,12 +1,18 @@
 package gui;
 
+import core.Constants;
+import core.Post;
+
 import java.awt.*;
-import java.awt.event.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import javax.swing.*;
-import javax.swing.border.*;
 
 public class ExpandedPost extends ScrollablePanel {
-    public ExpandedPost(CardLayout cl, JPanel cards){
+    public ExpandedPost(CardLayout cl, JPanel cards, Post post){
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx=0; gbc.gridy=GridBagConstraints.RELATIVE;
@@ -14,9 +20,10 @@ public class ExpandedPost extends ScrollablePanel {
         gbc.weightx=1.0;
 
         // Title, Author, Content
-        JTextPane title = makeTextPane("LOREM IPSUM", Constants.L_FONT);
-        JTextPane author = makeTextPane("by Cicero", Constants.S_FONT);
-        JTextPane content = makeTextPane("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin accumsan enim vel tortor vehicula mattis. Integer ornare interdum est, vitae cursus elit molestie non. Phasellus luctus porttitor lectus, sed condimentum tortor bibendum eget. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Mauris pulvinar eget elit at sagittis. Pellentesque convallis velit leo, non placerat risus imperdiet ac. Aliquam a lacus cursus, blandit nibh eget, pretium nibh. Sed maximus dictum nibh id semper. Nullam et fermentum augue. Morbi dictum sem et pretium dignissim.\nIn pretium quis erat eget vehicula. Cras vitae mattis sem. Maecenas ornare nisi nisi, vel lacinia elit euismod a. In pharetra risus sed euismod dignissim. Proin nisl nisi, auctor nec quam eget, egestas mattis lorem. Phasellus condimentum nisl elit, nec dapibus enim elementum auctor. Mauris convallis accumsan nunc, vitae mollis ante ultrices ac. Etiam hendrerit ornare nisi vel ullamcorper. Nulla imperdiet pretium fringilla. Suspendisse potenti. Duis in est risus.\nPellentesque ornare risus non libero euismod bibendum. Phasellus ante ante, interdum et nibh vitae, gravida tempus lectus. Maecenas rutrum convallis mi, nec aliquam enim egestas id. Sed ullamcorper erat felis, eu finibus odio lobortis sit amet. Proin nec rhoncus purus, sed euismod felis. Donec commodo ligula felis, sit amet egestas purus pulvinar sed. Proin non neque id ex imperdiet imperdiet. Donec eget tortor eu justo sagittis fermentum. Pellentesque tincidunt diam id nisl aliquam fermentum at in mi.", Constants.M_FONT);
+
+        JTextPane title = makeTextPane(post.getTitle(), Constants.L_FONT);
+        JTextPane author = makeTextPane(post.getAuthor().getDisplayName(), Constants.S_FONT);
+        JTextPane content = makeTextPane(post.getTextContent(), Constants.M_FONT);
 
         add(title, gbc);
         add(author, gbc);
@@ -28,13 +35,16 @@ public class ExpandedPost extends ScrollablePanel {
         JPanel utilityBar = new JPanel(new BorderLayout());
         utilityBar.setBackground(Color.WHITE);
 
-        JLabel date = new JLabel("1 January 2024 ");
+        String changedDate = GetDisplayDate(post.getTimeStamp());
+        //JLabel date = new JLabel("1 January 2024 ");
+        JLabel date = new JLabel(changedDate);
         date.setFont(Constants.S_FONT);
         utilityBar.add(date, BorderLayout.EAST);
 
         JPanel voteBlock = new JPanel();
         voteBlock.setBackground(Color.WHITE);
-        JLabel voteText = new JLabel("47");
+        JLabel voteText = new JLabel(String.valueOf(post.getVotes()));
+        //JLabel voteText = new JLabel("47");
         voteText.setFont(Constants.S_FONT);
         VoteArrow upvote = new VoteArrow(Constants.UP);
         VoteArrow downvote = new VoteArrow(Constants.DOWN);
@@ -96,4 +106,24 @@ public class ExpandedPost extends ScrollablePanel {
         textPane.setEditable(false);
         return textPane;
     }
+
+    private String GetDisplayDate(String input) {
+        //Changes instant string into a displayable format.
+        //(not necessary if we don't include time in UI)
+        Instant instant;
+        LocalDateTime timeStamp;
+        try {
+            instant = Instant.parse(input);
+            timeStamp = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+        } catch (DateTimeParseException e) {
+            System.out.println("Error parsing dateTime");
+            return "Error";
+        }
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a MMMM dd, yyyy");
+        return timeStamp.format(formatter);
+    }
+
+
 }
+

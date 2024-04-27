@@ -10,11 +10,17 @@ public class Account {
 	private String displayName;
 	private List<Post> postHistory;
 
+
+	public Account(int accountId, String username, String password, String displayName) {
+
+	}
+
 	// Sets username and password. Generates an accountId
 	public Account(String username, String password){
 		this.username = username;
 		this.password = password;
 	}
+
 
 
 	//Connects to databases needed for program to function

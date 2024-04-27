@@ -53,9 +53,22 @@ public class SQLiteHandler {
         }
     }
 
-    public ResultSet getPosts(int limit) {
+    public ResultSet getPostsByDate(int limit, int offset) {
         try {
-            String query = "SELECT * FROM post ORDER BY timeStamp DESC LIMIT " + limit + ";";
+            String query = "SELECT * FROM post ORDER BY timeStamp DESC LIMIT " + limit + " OFFSET " + offset + ";";
+
+            result = statement.executeQuery(query);
+            return result;
+        } catch(Exception ex) {
+            System.out.println("Failed to getPosts: " + ex.getMessage());
+        }
+
+        return null;
+    }
+
+    public ResultSet getPostsByVote(int limit, int offset) {
+        try {
+            String query = "SELECT * FROM post ORDER BY timeStamp DESC LIMIT " + limit + " OFFSET " + offset + ";";
 
             result = statement.executeQuery(query);
             return result;
@@ -115,6 +128,19 @@ public class SQLiteHandler {
             //...
         }
         return false;
+    }
+
+    public ResultSet getAccountById(int accountId) {
+        try {
+            String query = "SELECT * FROM account where accountID = " + accountId + ";";
+
+            result = statement.executeQuery(query);
+            return result;
+        } catch(Exception ex) {
+            System.out.println("Failed to getPosts: " + ex.getMessage());
+        }
+
+        return null;
     }
 
     /*

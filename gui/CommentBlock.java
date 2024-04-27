@@ -1,9 +1,9 @@
 package gui;
 
+import core.Constants;
+
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.*;
 
 public class CommentBlock extends JPanel {
     // indentLvl is to set up reply functionality in future. 

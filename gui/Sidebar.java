@@ -1,9 +1,9 @@
 package gui;
 
+import core.Constants;
+
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.*;
 
 public class Sidebar extends JPanel {
     private JButton loginBtn;

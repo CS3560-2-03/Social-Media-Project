@@ -1,9 +1,12 @@
 package gui;
 
+import core.Constants;
+import core.Post;
+import core.PostManager;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -18,11 +21,14 @@ public class GuiPrototype {
     private int zoomLvl;
     private JScrollPane sp;
     private JPanel sidebar;
+    private PostManager postManager;
     
     public GuiPrototype(){
         zoomLvl = 4;
         cl = CardManager.cardLayout;
         cards = CardManager.cards;
+
+        postManager = new PostManager();
 
         JFrame frame = new JFrame("UI Test");
         frame.setLayout(new BorderLayout());
@@ -134,7 +140,9 @@ public class GuiPrototype {
     }
 
     private void createPost() {
-        JPanel postPanel = new FeedPost(cl, cards);
+        //get post
+        Post nextPost = postManager.nextPost();
+        JPanel postPanel = new FeedPost(cl, cards, nextPost);
         contentFeed.add(postPanel);
         contentFeed.revalidate();
     }
