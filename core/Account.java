@@ -1,3 +1,5 @@
+package core;
+
 import java.sql.*;
 import java.util.*;
 
@@ -37,7 +39,7 @@ public class Account {
 	
 	/* Allows user to create a post. 
 		Once created, it is added to postHistory.
-		It is also added to the PostManager object
+		It is also added to the core.PostManager object
 	*/
 	public void createPost(){
 		

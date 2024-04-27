@@ -1,3 +1,7 @@
+package core;
+
+import database.SQLiteHandler;
+
 import java.sql.ResultSet;
 import java.util.*;
 

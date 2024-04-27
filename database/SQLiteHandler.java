@@ -1,8 +1,9 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+package database;
+
+import core.Post;
+
+import javax.swing.*;
+import java.sql.*;
 import java.util.List;
 
 public class SQLiteHandler {
@@ -16,7 +17,7 @@ public class SQLiteHandler {
 
 
 
-    public void startConnection() {
+    public boolean startConnection() {
         //Try checking for needed sqlite drivers
         try {
             Class.forName("org.sqlite.JDBC");
@@ -25,6 +26,7 @@ public class SQLiteHandler {
             try {
                 Connection conn = DriverManager.getConnection(url);
                 statement = conn.createStatement();
+                return true;
             } catch(SQLException e) {
                 System.out.println("Error connecting to SQLite database:" + e.getMessage());
             }
@@ -36,7 +38,7 @@ public class SQLiteHandler {
             System.out.println("make sure you've added slf4j-api, sl4j-simple, and sqlite-jdbc jars to project dependencies");
         }
 
-
+        return false;
 
     }
 
@@ -81,9 +83,43 @@ public class SQLiteHandler {
         return null;
     }
 
+    public boolean validateAccount(String username, String password){
+
+
+        //Used to execute SQLite commands
+        PreparedStatement preparedStmt = null;
+        String query = "INSERT INTO account(username, password) VALUES(?,?)";
+
+        try {
+
+            //"Prepare" the query
+            preparedStmt = conn.prepareStatement(query);
+
+            //***These setStrings are to set the arugments for INSERT INTO command***
+            //Refers to first ? in the query
+            preparedStmt.setString(1, username);
+            //Refers to second ? in the query
+            preparedStmt.setString(2, password);
+
+            //Execute the actual query
+            preparedStmt.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Account created!");
+            return true;
+            //...
+
+            //If unable to create an account
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Account already exists.");
+
+            //...
+        }
+        return false;
+    }
+
     /*
-    public Post getPost(int id) {
-        Post post = null;
+    public core.Post getPost(int id) {
+        core.Post post = null;
 
         int accountID;
         String title;
@@ -98,7 +134,7 @@ public class SQLiteHandler {
             while(result.next()) {
 
 
-                //post = new Post(result.getInt("postID"), )
+                //post = new core.Post(result.getInt("postID"), )
 
 
                 id = result.getInt("postID");
@@ -110,7 +146,7 @@ public class SQLiteHandler {
 
 
             }
-            //Should get Account i think (but check if we already loaded account??)
+            //Should get core.Account i think (but check if we already loaded account??)
             //Wait how are we loading from database to runtime?
 
             statement = conn.createStatement();

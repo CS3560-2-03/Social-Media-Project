@@ -1,3 +1,5 @@
+package core;
+
 import java.time.Instant;
 
 public class Comment {
