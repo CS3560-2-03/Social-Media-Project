@@ -12,7 +12,7 @@ import java.time.format.DateTimeParseException;
 import javax.swing.*;
 
 public class ExpandedPost extends ScrollablePanel {
-    public ExpandedPost(CardLayout cl, JPanel cards, Post post){
+    public ExpandedPost(Post post){
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx=0; gbc.gridy=GridBagConstraints.RELATIVE;
@@ -69,7 +69,7 @@ public class ExpandedPost extends ScrollablePanel {
         addCommentPanel.add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
 
         //  !!! This textarea isn't the right size for some reason. It should be 3 rows but that doesn't work. 
-            // I don't really know why but probably something to do with layout managers but 
+            // I don't really know why but probably something to do with layout managers 
         JTextArea commentInput = new JTextArea();
         commentInput.setLineWrap(true);
         commentInput.setWrapStyleWord(true);

@@ -14,13 +14,12 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 public class FeedPost extends JPanel {
-	private CardLayout cl;
-	private JPanel cards;
+	private CardLayout cl = CardManager.cardLayout;
+	private JPanel cards = CardManager.cards;
     private Post post;
+    private int maxContentLength = 500;
 	
-	public FeedPost(CardLayout cl, JPanel cards, Post post) {
-		this.cl = cl;
-		this.cards = cards;
+	public FeedPost(Post post) {
 		this.post = post;
 		setLayout(new BorderLayout());
         setBorder(new EmptyBorder(10, 0, 10, 0)); // Insets: top, left, bottom, right
@@ -34,20 +33,15 @@ public class FeedPost extends JPanel {
 
 
 
-        JLabel title = new JLabel(post.getTitle());
-        JLabel author = new JLabel(post.getAuthor().getDisplayName());
-        JLabel content = new JLabel(post.getTextContent());
-        //JLabel title = new JLabel("LOREM IPSUM");
-        //JLabel author = new JLabel("by Cicero");
-        //JLabel content = new JLabel("<html>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In mollis lorem id justo cursus, nec congue purus commodo. Sed ut enim eros. Proin dignissim metus metus, ac tempor sapien blandit quis. Sed ac faucibus nunc. Etiam ullamcorper velit sit amet massa lacinia aliquam. Sed eget fermentum leo, sed maximus libero. Quisque cursus elit turpis, id egestas leo pretium quis.</html>");
-        title.setFont(Constants.L_FONT);
-        author.setFont(Constants.S_FONT);
-        content.setFont(Constants.M_FONT);
+        JTextPane title = makeTextPane(post.getTitle(), Constants.L_FONT);
+        JTextPane author = makeTextPane(post.getAuthor().getDisplayName(), Constants.S_FONT);
+        JTextPane content = makeTextPane(truncateContent(post.getTextContent()), Constants.M_FONT);
 
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
         author.setAlignmentX(Component.LEFT_ALIGNMENT);
         content.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+        
 
         innerPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         innerPanel.addMouseListener(new MouseAdapter() {
@@ -75,6 +69,30 @@ public class FeedPost extends JPanel {
         innerPanel.add(content);
         add(utilityBar, BorderLayout.SOUTH);
 	}
+	
+	// Truncates content to a certain number of characters
+	private String truncateContent(String content) {
+		if (content.length() > maxContentLength) {
+			return content.substring(0, maxContentLength)+"...";
+		} else {
+			return content;
+		}
+	}
+	
+	private JTextPane makeTextPane(String text, Font font){
+        JTextPane textPane = new JTextPane();
+        textPane.setText(text);
+        textPane.setFont(font);
+        textPane.setEditable(false);
+        textPane.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        textPane.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                expandPost();
+            }
+        });
+        return textPane;
+    }
 
     private String GetShortDisplayDate(String input) {
         //Changes instant string into a displayable format.
@@ -98,7 +116,7 @@ public class FeedPost extends JPanel {
     // however it never deletes the old expandedPost.
     // Fix later
     private void expandPost(){
-        JScrollPane expandedPost = new JScrollPane(new ExpandedPost(cl, cards, post));
+        JScrollPane expandedPost = new JScrollPane(new ExpandedPost(post));
 //        expandedPost.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
         
         cards.add(expandedPost, "expandedPost");

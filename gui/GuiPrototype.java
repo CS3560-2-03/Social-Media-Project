@@ -142,7 +142,7 @@ public class GuiPrototype {
     private void createPost() {
         //get post
         Post nextPost = postManager.nextPost();
-        JPanel postPanel = new FeedPost(cl, cards, nextPost);
+        JPanel postPanel = new FeedPost(nextPost);
         contentFeed.add(postPanel);
         contentFeed.revalidate();
     }
