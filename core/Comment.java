@@ -13,6 +13,7 @@ public class Comment {
 	private int votes;
 	private Instant timeStamp;
 
+	// This constructor is for when loading existing comments
 	public Comment(int commentId, int accountId, int postId, String content, Instant timeStamp){
 		this.commentId = commentId;
 		this.accountId = accountId;
@@ -22,6 +23,19 @@ public class Comment {
 		this.timeStamp = timeStamp;
 		
 		author = DataAccesser.fetchAccount(accountId);
+	}
+	
+	// This constructor is for when creating new comments
+	public Comment(int accountId, int postId, String content) {
+		this.accountId = accountId;
+		this.postId = postId;
+		this.content = content;
+		this.timeStamp = Instant.now();
+	}
+	
+	// This should be called externally when creating new comments
+	public void setCommentId(int commentId) {
+		this.commentId = commentId;
 	}
 
 	public Account getAuthor() {
@@ -36,8 +50,16 @@ public class Comment {
 		return timeStamp;
 	}
 
-	public int getId() {
+	public int getCommentId() {
 		return commentId;
+	}
+	
+	public int getPostId() {
+		return postId;
+	}
+	
+	public int getAccountId() {
+		return accountId;
 	}
 	
 	public int getVotes() {

@@ -9,6 +9,33 @@ import java.util.List;
 
 public class DataAccesser {
 	
+	public static void uploadComment(Comment comment) {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+		try {
+			connection = connectToDatabase();
+			statement = connection.prepareStatement("INSERT INTO comment(postId, accountId, content, votes, timeStamp) VALUES(?,?,?,?,?)");
+			statement.setInt(1, comment.getPostId());
+			statement.setInt(2, comment.getAccountId());
+			statement.setString(3, comment.getContent());
+			statement.setInt(4, comment.getVotes());
+			statement.setString(5, Instant.now().toString());
+			
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+	        // Close resources in the reverse order
+	        try {
+	            if (statement != null) statement.close();
+	            if (connection != null) connection.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+		}
+	}
+	
 	// Returns an array of comments based on a postId
 	public static List<Comment> fetchComments(int postId) {
 		Connection connection = null;

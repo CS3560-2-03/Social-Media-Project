@@ -24,6 +24,7 @@ public class Main {
     private static JScrollPane sp;
     private static Sidebar sidebar;
     
+    private static boolean isLoggedIn;
     private static int currentAccountId;
     
     public static void main(String[] args) {
@@ -32,11 +33,16 @@ public class Main {
     
     public static void setCurrentAccountId(int accId) {
     	currentAccountId = accId;
+    	isLoggedIn = true;
     	sidebar.enablePostBtn(true);
     }
     
     public static int getCurrentAccountId() {
     	return currentAccountId;
+    }
+    
+    public static boolean isLoggedIn() {
+    	return isLoggedIn;
     }
     
     private static void launch(){

@@ -5,6 +5,8 @@ import core.Constants;
 import core.Post;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -15,7 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExpandedPost extends ScrollablePanel {
+	private JPanel commentSection;
+	private Post post;
+	
     public ExpandedPost(Post post){
+    	this.post = post;
+    	
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx=0; gbc.gridy=GridBagConstraints.RELATIVE;
@@ -38,7 +45,7 @@ public class ExpandedPost extends ScrollablePanel {
         JPanel utilityBar = new JPanel(new BorderLayout());
         utilityBar.setBackground(Color.WHITE);
 
-        String changedDate = GetDisplayDate(post.getTimeStamp());
+        String changedDate = getDisplayDate(post.getTimeStamp());
         //JLabel date = new JLabel("1 January 2024 ");
         JLabel date = new JLabel(changedDate);
         date.setFont(Constants.S_FONT);
@@ -71,7 +78,7 @@ public class ExpandedPost extends ScrollablePanel {
 
         addCommentPanel.add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
 
-        //  !!! This textarea isn't the right size for some reason. It should be 3 rows but that doesn't work. 
+        //  !!! This textarea isn't always the right size for some reason. It should be 3 rows. 
             // I don't really know why but probably something to do with layout managers 
         JTextArea commentInput = new JTextArea();
         commentInput.setLineWrap(true);
@@ -85,26 +92,46 @@ public class ExpandedPost extends ScrollablePanel {
         postCommentBtn.setBackground(Color.decode("#CCCCCC"));
         postCommentBtn.setFont(Constants.S_FONT);
         addCommentPanel.add(postCommentBtn, gbc);
+        postCommentBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        postCommentBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            	if (!Main.isLoggedIn()) {
+            		JOptionPane.showMessageDialog(null, "Please log in to comment");
+            		return;
+            	}
+            	
+            	Comment comment = new Comment(Main.getCurrentAccountId(), post.getPostId(), commentInput.getText());
+                DataAccesser.uploadComment(comment);
+                
+                loadComments();
+                revalidate();
+            }
+        });
 
         add(addCommentPanel, gbc);
         add(Box.createRigidArea(new Dimension(0, 20)), gbc);
-
-
-
-
+        
         // Comment section
-        JPanel commentSection = new JPanel(new GridBagLayout());
+        commentSection = new JPanel(new GridBagLayout());
         commentSection.setBackground(Color.WHITE);
         add(commentSection, gbc);
         
-        List<Comment> comments = DataAccesser.fetchComments(post.getPostId());
+        loadComments();
+    }
+    
+    private void loadComments() {
+    	commentSection.removeAll();
+    	
+    	GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx=0; gbc.gridy=GridBagConstraints.RELATIVE;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        gbc.weightx=1.0;
+    	
+    	List<Comment> comments = DataAccesser.fetchComments(post.getPostId());
         for (Comment comment : comments) {
         	commentSection.add(new CommentBlock(comment), gbc);
         }
-
-//        commentSection.add(new CommentBlock(0), gbc);
-//        commentSection.add(new CommentBlock(1), gbc);
-//        commentSection.add(new CommentBlock(0), gbc);
     }
 
     private JTextPane makeTextPane(String text, Font font){
@@ -115,7 +142,7 @@ public class ExpandedPost extends ScrollablePanel {
         return textPane;
     }
 
-    private String GetDisplayDate(String input) {
+    private String getDisplayDate(String input) {
         //Changes instant string into a displayable format.
         Instant instant;
         LocalDateTime timeStamp;
