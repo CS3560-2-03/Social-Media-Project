@@ -84,6 +84,7 @@ public class LoginScreen extends JPanel {
             if (results.next()) {
                 int userID = results.getInt("accountID");
                 UserProfileScreen.setInfo(userID);
+                Main.setCurrentAccountId(userID);
                 JOptionPane.showMessageDialog(null, "Successfully logged in!");
                 sidebar.showUserProfileBtn();
                 c.close();

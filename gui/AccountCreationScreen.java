@@ -11,7 +11,6 @@ import java.sql.*;
 
 
 public class AccountCreationScreen extends JPanel {
-    private String ACCOUNTS_FILE = "accounts.csv";
     
     public AccountCreationScreen(){
     	CardLayout cl = CardManager.cardLayout;
@@ -57,9 +56,9 @@ public class AccountCreationScreen extends JPanel {
         displayNameField.setToolTipText("Enter display name here");
         add(displayNameField, gbc);
 
-        JButton loginBtn = new JButton("Create Account");
-        add(loginBtn, gbc);
-        loginBtn.addActionListener(e->validateAccount(usernameField.getText(), passwordField.getText(), displayNameField.getText()));
+        JButton createAccountBtn = new JButton("Create Account");
+        add(createAccountBtn, gbc);
+        createAccountBtn.addActionListener(e->createAccount(usernameField.getText(), passwordField.getText(), displayNameField.getText()));
     }
 
     
@@ -85,7 +84,7 @@ public class AccountCreationScreen extends JPanel {
 
 
     //Create account with user's inputted information
-    private void validateAccount(String username, String password, String displayName){
+    private void createAccount(String username, String password, String displayName){
         //Variable to connect to Account database
         Connection c = null;
 

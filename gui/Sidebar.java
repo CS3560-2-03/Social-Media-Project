@@ -7,6 +7,7 @@ import javax.swing.*;
 
 public class Sidebar extends JPanel {
     private JButton loginBtn;
+    private JButton postBtn;
     
     public Sidebar(){
     	CardLayout cl = CardManager.cardLayout;
@@ -20,9 +21,10 @@ public class Sidebar extends JPanel {
         homeBtn.addActionListener(event->cl.show(cards, "home"));
 
         // CREATE POST
-        JButton postBtn = new JButton("Post");
+        postBtn = new JButton("Post");
         postBtn.setFont(Constants.XL_FONT);
         postBtn.addActionListener(event->cl.show(cards, "postCreationScreen"));
+        postBtn.setEnabled(false);
 
         //  SORTING
         JLabel sortLbl = new JLabel("Sort", SwingConstants.CENTER);
@@ -31,6 +33,7 @@ public class Sidebar extends JPanel {
         ButtonGroup sortBtns = new ButtonGroup();
         JRadioButton recent = new JRadioButton("Recent");
         JRadioButton popular = new JRadioButton("Popular");
+        recent.setSelected(true);
         recent.setFont(Constants.M_FONT);
         popular.setFont(Constants.M_FONT);
         sortBtns.add(recent);
@@ -102,6 +105,10 @@ public class Sidebar extends JPanel {
         gbc.weighty=0;
         
         add(loginBtn, gbc);
+    }
+    
+    public void enablePostBtn(boolean status) {
+    	postBtn.setEnabled(status);
     }
 
     public void showUserProfileBtn(){
