@@ -70,4 +70,8 @@ public class Account {
 	public int getId(){
 		return accountId;
 	}
+
+	public String getUsername() {
+		return username;
+	}
 }
