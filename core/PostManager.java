@@ -15,9 +15,9 @@ public class PostManager {
 	private boolean filterByTime;
 	private int timeFilterDays;
 
-	//lastID: Used to track which posts have been displayed
+	//lastDisplayedID: postID of last displayed post. Used to track which posts have been displayed
 	//postList should never be sorted, just appended or remade
-	private int lastID = -1;
+	private int lastDisplayedID = -1;
 
 
 	private SQLiteHandler sqLiteHandler;
@@ -31,25 +31,21 @@ public class PostManager {
 
 	public Post nextPost() {
 
-		int index = getIdIndex(lastID);
+		int index = getIdIndex(lastDisplayedID);
 
-		//If the last post we got was at the end of the list
-		//fetch more posts!
+		//If the last post we got was at the end of the list, fetch more posts!
 		if(index == -1 || index + 1 >= postList.size()) {
 			fetchPosts();
 		}
 
-		//If we ran out of posts, loop back to beginning of list
+		//If we ran out of posts, do nothing
 		if(index + 1 >= postList.size()) {
-			index = 0;
-
-			//We could also fill it with dummy posts here:
-			//return new Post(-1, -1, "Lorem Ipsum", "<html>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In mollis lorem id justo cursus, nec congue purus commodo. Sed ut enim eros. Proin dignissim metus metus, ac tempor sapien blandit quis. Sed ac faucibus nunc. Etiam ullamcorper velit sit amet massa lacinia aliquam. Sed eget fermentum leo, sed maximus libero. Quisque cursus elit turpis, id egestas leo pretium quis.</html>", 0,  Instant.now().toString());
+			return null;
 		} else {
 			index++;
 		}
 
-		lastID = postList.get(index).getPostId();
+		lastDisplayedID = postList.get(index).getPostId();
 		return postList.get(index);
 	}
 

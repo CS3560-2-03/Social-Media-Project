@@ -156,8 +156,10 @@ public class Main {
 //    }
 
     private static void createPost() {
-        //get post
         Post nextPost = postManager.nextPost();
+        if (nextPost==null) {
+        	return;
+        }
         JPanel postPanel = new FeedPost(nextPost);
         contentFeed.add(postPanel);
         contentFeed.revalidate();

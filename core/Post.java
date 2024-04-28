@@ -18,7 +18,7 @@ public class Post {
 	private Account author;
 	private List<Comment> comments;
 
-	// Create post with no embedded image. Generates a postId
+	// Create post with no embedded image
 	public Post(int postId, int authorId, String title, String textContent, int votes, String timeStamp){
 		this.postId = postId;
 		this.authorId = authorId;
@@ -100,10 +100,6 @@ public class Post {
 	}
 
 	public Account getAuthor(){
-		if(author == null) {
-			return new Account(-1, "user", "pass", "fakeUser");
-		}
-
 		return author;
 	}
 

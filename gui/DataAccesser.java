@@ -39,7 +39,6 @@ public class DataAccesser {
 		return result;
 	}
 	
-	
 	//Connects to databases needed for program to function
   	private static Connection connectToDatabase() {
   		Connection c = null;

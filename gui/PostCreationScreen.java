@@ -6,6 +6,7 @@ import java.awt.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.time.Instant;
 
 import javax.swing.*;
 
@@ -55,7 +56,7 @@ public class PostCreationScreen extends ScrollablePanel {
 
         //Used to execute SQLite commands
         PreparedStatement preparedStmt = null;
-        String query = "INSERT INTO post(accountID, title, textContent, embedLink) VALUES(?,?,?,?)";
+        String query = "INSERT INTO post(accountID, title, textContent, embedLink, timeStamp) VALUES(?,?,?,?,?)";
 
         try {
             c = connectToDatabase();
@@ -67,6 +68,7 @@ public class PostCreationScreen extends ScrollablePanel {
             preparedStmt.setString(2, title);
             preparedStmt.setString(3, content);
             preparedStmt.setString(4, embedLink);
+            preparedStmt.setString(5, Instant.now().toString());
 
             //Execute the actual query
             preparedStmt.executeUpdate();
