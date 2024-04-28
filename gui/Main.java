@@ -155,6 +155,7 @@ public class Main {
     
     public static void clearPosts() {
     	contentFeed.removeAll();
+    	contentFeed.revalidate();
     }
 
     private static void createPost() {

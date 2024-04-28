@@ -1,5 +1,6 @@
 package gui;
 
+import core.Comment;
 import core.Constants;
 import core.Post;
 
@@ -10,6 +11,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExpandedPost extends ScrollablePanel {
     public ExpandedPost(Post post){
@@ -93,10 +96,15 @@ public class ExpandedPost extends ScrollablePanel {
         JPanel commentSection = new JPanel(new GridBagLayout());
         commentSection.setBackground(Color.WHITE);
         add(commentSection, gbc);
+        
+        List<Comment> comments = DataAccesser.fetchComments(post.getPostId());
+        for (Comment comment : comments) {
+        	commentSection.add(new CommentBlock(comment), gbc);
+        }
 
-        commentSection.add(new CommentBlock(0), gbc);
-        commentSection.add(new CommentBlock(1), gbc);
-        commentSection.add(new CommentBlock(0), gbc);
+//        commentSection.add(new CommentBlock(0), gbc);
+//        commentSection.add(new CommentBlock(1), gbc);
+//        commentSection.add(new CommentBlock(0), gbc);
     }
 
     private JTextPane makeTextPane(String text, Font font){
@@ -109,7 +117,6 @@ public class ExpandedPost extends ScrollablePanel {
 
     private String GetDisplayDate(String input) {
         //Changes instant string into a displayable format.
-        //(not necessary if we don't include time in UI)
         Instant instant;
         LocalDateTime timeStamp;
         try {

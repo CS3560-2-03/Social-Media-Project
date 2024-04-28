@@ -117,5 +117,5 @@ public class PostManager {
 			System.out.println("resultset was not valid: " + ex.getMessage());
 		}
 		sqLiteHandler.endConnection();
-	}	
+	}
 }

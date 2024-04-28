@@ -1,17 +1,22 @@
 package gui;
 
+import core.Comment;
 import core.Constants;
 
 import java.awt.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 import javax.swing.*;
 
 public class CommentBlock extends JPanel {
-    // indentLvl is to set up reply functionality in future. 
-    public CommentBlock(int indentLvl){
+	private int indentLvl = 0; // indentLvl is to set up reply functionality in future. 
+	
+	
+    public CommentBlock(Comment comment){
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx=0; gbc.gridy=0;
@@ -23,12 +28,8 @@ public class CommentBlock extends JPanel {
 
         JPanel topBar = new JPanel(new BorderLayout());
         topBar.setBackground(Color.WHITE);
-
-        //Name of the commenter, along with time the comment was written
-        //NOTE: The 1 within the function calls below is merely a placeholder
-        //TODO: Connect Post database with Comment database to fetch appropriate comments
-        topBar.add(makeTextPane(getCommentUsername(fetchCommentUsernameID(1)), Constants.S_FONT), BorderLayout.WEST);
-        topBar.add(makeTextPane(getCommentTimeStamp(fetchCommentUsernameID(1)), Constants.S_FONT), BorderLayout.CENTER);
+        topBar.add(makeTextPane(comment.getAuthor().getDisplayName(), Constants.S_FONT), BorderLayout.WEST);
+        topBar.add(makeTextPane(getDisplayDate(comment.getTimeStamp().toString()), Constants.S_FONT), BorderLayout.CENTER);
         JLabel reportBtn = new JLabel(" Report ");
         reportBtn.setOpaque(true);
         reportBtn.setBackground(Color.decode("#BBBBBB"));
@@ -36,7 +37,7 @@ public class CommentBlock extends JPanel {
         topBar.add(reportBtn, BorderLayout.EAST);
 
         // Title, Author, Content
-        JTextPane content = makeTextPane(fetchComment(1), Constants.S_FONT);
+        JTextPane content = makeTextPane(comment.getContent(), Constants.S_FONT);
 
         add(topBar, gbc);
         add(content, gbc);
@@ -46,7 +47,7 @@ public class CommentBlock extends JPanel {
 
         JPanel voteBlock = new JPanel();
         voteBlock.setBackground(Color.WHITE);
-        JLabel voteText = new JLabel("47");
+        JLabel voteText = new JLabel(comment.getVotes()+"");
         voteText.setFont(Constants.S_FONT);
         VoteArrow upvote = new VoteArrow(Constants.UP);
         VoteArrow downvote = new VoteArrow(Constants.DOWN);
@@ -69,128 +70,20 @@ public class CommentBlock extends JPanel {
         textPane.setEditable(false);
         return textPane;
     }
-
-    //Fetches comments from database and places them in appropriate post
-    private String fetchComment(int postID) {
-        Connection c = null;
-        PreparedStatement preparedStmt = null;
-        ResultSet results = null;
-        String query = "SELECT content FROM comment WHERE postID LIKE ?";
-
+    
+    private String getDisplayDate(String input) {
+        //Changes instant string into a displayable format.
+        Instant instant;
+        LocalDateTime timeStamp;
         try {
-            c = AccountCreationScreen.connectToDatabase();
-            preparedStmt = c.prepareStatement(query);
-            preparedStmt.setInt(1, postID);
-
-            results = preparedStmt.executeQuery();
-            String commentContent = results.getString("content");
-            
-            return commentContent;
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-
-            return null;
+            instant = Instant.parse(input);
+            timeStamp = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+        } catch (DateTimeParseException e) {
+            System.out.println("Error parsing dateTime");
+            return "Error";
         }
-    }
 
-    //Fetches the accountID who made the comment.
-    //As such the return type is int
-    private int fetchCommentUsernameID(int postID) {
-        Connection c = null;
-        PreparedStatement preparedStmt = null;
-        ResultSet results = null;
-        String query = "SELECT accountID FROM comment WHERE postID LIKE ?";
-
-        try {
-            c = AccountCreationScreen.connectToDatabase();
-            preparedStmt = c.prepareStatement(query);
-            preparedStmt.setInt(1, postID);
-
-            results = preparedStmt.executeQuery();
-            int accID = results.getInt("accountID");
-            
-            return accID;
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-
-            return -1;
-        }
-    }
-
-    //Mainly used in conjunction with fetchCommentUsernameID to get the comment content, 
-    //along with the user who made said comment
-    private String getCommentUsername(int postID) {
-        Connection c = null;
-        PreparedStatement preparedStmt = null;
-        ResultSet results = null;
-        String query = "SELECT displayName FROM account WHERE accountID LIKE ?";
-
-        try {
-            c = AccountCreationScreen.connectToDatabase();
-            preparedStmt = c.prepareStatement(query);
-            preparedStmt.setInt(1, postID);
-
-            results = preparedStmt.executeQuery();
-            String commentAccountUser = results.getString("displayName");
-            
-            return commentAccountUser;
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-
-            return null;
-        }
-    }
-
-
-    //Mainly used in conjunction with fetchCommentUsernameID to get the comment's creation date
-    //TODO: Parse timestamp into something more pleasant to look at
-    private String getCommentTimeStamp(int postID) {
-        Connection c = null;
-        PreparedStatement preparedStmt = null;
-        ResultSet results = null;
-        String query = "SELECT timeStamp FROM comment WHERE accountID LIKE ?";
-
-        try {
-            c = AccountCreationScreen.connectToDatabase();
-            preparedStmt = c.prepareStatement(query);
-            preparedStmt.setInt(1, postID);
-
-            results = preparedStmt.executeQuery();
-            String commentAccountUser = results.getString("timeStamp");
-            
-            return commentAccountUser;
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-
-            return null;
-        }
-    }
-
-
-    //Gets the post's ID from the Post database, which is used to retrieve comments from the Comment database with the same postID
-    private void getPostId(int postID) {
-        Connection c = null;
-        PreparedStatement preparedStmt = null;
-        ResultSet results = null;
-        String query = "SELECT postID FROM post WHERE accountID LIKE ?";
-
-        try {
-            c = AccountCreationScreen.connectToDatabase();
-            preparedStmt = c.prepareStatement(query);
-            preparedStmt.setInt(1, postID);
-
-            results = preparedStmt.executeQuery();
-            String commentAccountUser = results.getString("timeStamp");
-            
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-
-        }
-   
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a MMMM dd, yyyy");
+        return timeStamp.format(formatter);
     }
 }
