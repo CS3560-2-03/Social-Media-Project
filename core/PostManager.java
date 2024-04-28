@@ -49,11 +49,6 @@ public class PostManager {
 			index++;
 		}
 
-
-
-
-
-
 		lastID = postList.get(index).getPostId();
 		return postList.get(index);
 	}

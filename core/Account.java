@@ -12,10 +12,13 @@ public class Account {
 
 
 	public Account(int accountId, String username, String password, String displayName) {
-
+		this.accountId = accountId;
+		this.username = username;
+		this.password = password;
+		this.displayName = displayName;
 	}
 
-	// Sets username and password. Generates an accountId
+	// Sets username and password
 	public Account(String username, String password){
 		this.username = username;
 		this.password = password;

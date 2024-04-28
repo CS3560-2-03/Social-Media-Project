@@ -89,18 +89,12 @@ public class PostCreationScreen extends ScrollablePanel {
     }
     
     //Connects to databases needed for program to function
-  	//If unable to connect to database, return null and print error message in console
   	private Connection connectToDatabase() {
   		Connection c = null;
-
   		try {
   			String url = "jdbc:sqlite:database/main.db";
-
-  			//Try to connect to our databases
   			c = DriverManager.getConnection(url);
-
   			System.out.println("Connection to database was successful.");
-
   			return c;
   		} catch (Exception e) {
   			System.out.println(e.getMessage());

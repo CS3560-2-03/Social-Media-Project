@@ -30,9 +30,6 @@ public class FeedPost extends JPanel {
         innerPanel.setBackground(Color.WHITE);
         add(innerPanel, BorderLayout.CENTER);
 
-
-
-
         JTextPane title = makeTextPane(post.getTitle(), Constants.L_FONT);
         JTextPane author = makeTextPane(post.getAuthor().getDisplayName(), Constants.S_FONT);
         JTextPane content = makeTextPane(truncateContent(post.getTextContent()), Constants.M_FONT);

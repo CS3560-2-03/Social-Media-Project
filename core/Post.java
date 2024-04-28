@@ -1,7 +1,11 @@
 package core;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.time.Instant;
 import java.util.*;
+
+import gui.DataAccesser;
 
 public class Post {
 	private int postId;
@@ -27,10 +31,22 @@ public class Post {
 			System.out.println("For Post " + postId  + ": unable to parse timeStamp: " + ex.getMessage());
 			this.timeStamp = Instant.now();
 		}
-
+		this.author = DataAccesser.fetchAccount(authorId);
 	}
 
-
+	//Connects to databases needed for program to function
+  	private Connection connectToDatabase() {
+  		Connection c = null;
+  		try {
+  			String url = "jdbc:sqlite:database/main.db";
+  			c = DriverManager.getConnection(url);
+  			System.out.println("Connection to database was successful.");
+  			return c;
+  		} catch (Exception e) {
+  			System.out.println(e.getMessage());
+  			return null;
+  		}
+  	}
 
 	// Expands post, displaying full content and comments
 	public void expand(){
