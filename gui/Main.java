@@ -16,13 +16,13 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 public class Main {
+	private static JFrame frame;
     private static ScrollablePanel contentFeed;
     private static JPanel cards;
     private static CardLayout cl;
     private static int zoomLvl;
     private static JScrollPane sp;
     private static Sidebar sidebar;
-    private static PostManager postManager;
     
     private static int currentAccountId;
     
@@ -44,9 +44,7 @@ public class Main {
         cl = CardManager.cardLayout;
         cards = CardManager.cards;
 
-        postManager = new PostManager();
-
-        JFrame frame = new JFrame("UI Test");
+        frame = new JFrame("OOPlatform");
         frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1200, 800);
@@ -154,9 +152,13 @@ public class Main {
 //            }
 //        }
 //    }
+    
+    public static void clearPosts() {
+    	contentFeed.removeAll();
+    }
 
     private static void createPost() {
-        Post nextPost = postManager.nextPost();
+        Post nextPost = PostManager.nextPost();
         if (nextPost==null) {
         	return;
         }

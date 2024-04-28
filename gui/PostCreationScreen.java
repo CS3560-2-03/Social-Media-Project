@@ -56,7 +56,7 @@ public class PostCreationScreen extends ScrollablePanel {
 
         //Used to execute SQLite commands
         PreparedStatement preparedStmt = null;
-        String query = "INSERT INTO post(accountID, title, textContent, embedLink, timeStamp) VALUES(?,?,?,?,?)";
+        String query = "INSERT INTO post(accountID, title, textContent, embedLink, timeStamp, votes) VALUES(?,?,?,?,?)";
 
         try {
             c = connectToDatabase();
@@ -69,6 +69,7 @@ public class PostCreationScreen extends ScrollablePanel {
             preparedStmt.setString(3, content);
             preparedStmt.setString(4, embedLink);
             preparedStmt.setString(5, Instant.now().toString());
+            preparedStmt.setInt(6, 0);
 
             //Execute the actual query
             preparedStmt.executeUpdate();

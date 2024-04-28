@@ -1,35 +1,29 @@
 package core;
 
 import database.SQLiteHandler;
+import gui.Main;
 
 import java.sql.ResultSet;
 import java.time.Instant;
 import java.util.*;
 
 public class PostManager {
+	private static List<Post> postList = new ArrayList<Post>();
+	private static boolean sortByVotes = false; // If False, defaults to sorting by new.
+	private static boolean filterByFollowed;
+	private static boolean filterByTime;
+	private static int timeFilterDays;
 
-
-	private List<Post> postList;
-	private boolean sortByVotes = false; // If False, defaults to sorting by new.
-	private boolean filterByFollowed;
-	private boolean filterByTime;
-	private int timeFilterDays;
-
+	private static SQLiteHandler sqLiteHandler = new SQLiteHandler();
+	
 	//lastDisplayedID: postID of last displayed post. Used to track which posts have been displayed
 	//postList should never be sorted, just appended or remade
-	private int lastDisplayedID = -1;
-
-
-	private SQLiteHandler sqLiteHandler;
+	private static int lastDisplayedID = -1;
 
 	// By default, sortByVotes is false, filterByTime is true, and timeFilterDays is 7.
 	// Sets postList by calling fetchPosts()
-	public PostManager(){
-		sqLiteHandler = new SQLiteHandler();
-		postList = new ArrayList<Post>();
-	}
 
-	public Post nextPost() {
+	public static Post nextPost() {
 
 		int index = getIdIndex(lastDisplayedID);
 
@@ -49,7 +43,7 @@ public class PostManager {
 		return postList.get(index);
 	}
 
-	public int getIdIndex(int postId) {
+	public static int getIdIndex(int postId) {
 		for(int i = 0; i < postList.size(); i++) {
 			if(postId == postList.get(i).getPostId()) {
 				return i;
@@ -58,10 +52,20 @@ public class PostManager {
 		return -1;
 	}
 
+	public static void setSortByVotes(boolean value) {
+		sortByVotes = value;
+		clearPosts();
+	}
+	
+	private static void clearPosts() {
+		Main.clearPosts();
+		postList.clear();
+		lastDisplayedID = -1;
+	}
 
 	// Fetches posts based on the sort and filter options and adds them to postList
 	// They are fetched from a data file
-	public void fetchPosts() {
+	public static void fetchPosts() {
 		//todo: fetchPosts should get NEW posts, not the same lol
 		ResultSet result;
 		sqLiteHandler.startConnection();
@@ -114,32 +118,4 @@ public class PostManager {
 		}
 		sqLiteHandler.endConnection();
 	}
-
-
-
-
-
-
-	/*
-	// Filters and/or sorts the displayed content feed.
-	public void filterSortFeed(){
-
-	}
-
-	public void setSortByVotes(input){
-
-	}
-
-	public void setFilterByFollowed(input){
-
-	}
-
-	public void setFilterByTime(input){
-
-	}
-
-	public void setTimeFilterDays(days){
-
-	}
-	*/
 }

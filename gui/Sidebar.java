@@ -1,6 +1,7 @@
 package gui;
 
 import core.Constants;
+import core.PostManager;
 
 import java.awt.*;
 import javax.swing.*;
@@ -38,6 +39,9 @@ public class Sidebar extends JPanel {
         popular.setFont(Constants.M_FONT);
         sortBtns.add(recent);
         sortBtns.add(popular);
+        
+        recent.addActionListener(e->PostManager.setSortByVotes(false));
+        popular.addActionListener(e->PostManager.setSortByVotes(true));
 
         //  FILTERING
         JLabel filterLbl = new JLabel("Filter", SwingConstants.CENTER);

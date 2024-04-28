@@ -68,7 +68,7 @@ public class SQLiteHandler {
 
     public ResultSet getPostsByVote(int limit, int offset) {
         try {
-            String query = "SELECT * FROM post ORDER BY timeStamp DESC LIMIT " + limit + " OFFSET " + offset + ";";
+            String query = "SELECT * FROM post ORDER BY votes DESC LIMIT " + limit + " OFFSET " + offset + ";";
 
             result = statement.executeQuery(query);
             return result;
