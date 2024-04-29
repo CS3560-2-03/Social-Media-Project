@@ -226,21 +226,16 @@ public class DataAccesser {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		
-
 		try {
 			connection = connectToDatabase();
 			String query = "UPDATE PostVote SET value = ? WHERE accountId = ? AND postId = ?;";
 
-
 			statement = connection.prepareStatement(query);
-
 			statement.setInt(1, newValue);
 			statement.setInt(2, accountId);
 			statement.setInt(3, postId);
-
 			statement.executeUpdate();
-
-					//Insert a new record if one doesn't exist
+			//Insert a new record if one doesn't exist
 			query = "INSERT INTO PostVote (accountId, postId, value)\n" +
 					"SELECT ?, ?, ?\n" +
 					"WHERE NOT EXISTS (\n" +
@@ -253,13 +248,18 @@ public class DataAccesser {
 			statement.setInt(4, accountId);
 			statement.setInt(5, postId);
 
-
 			statement.executeUpdate();
-
 		} catch(Exception ex) {
 			System.out.println("Failed to add/update vote: " + ex.getMessage() + "\n" + ex.getStackTrace()[0].getLineNumber() + "\n" + ex.getCause());
-		}
-
+		} finally {
+	        // Close resources in the reverse order
+	        try {
+	            if (statement != null) statement.close();
+	            if (connection != null) connection.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
 	}
 
 	public static void uploadCommentVote(int accountId, int commentId, int newValue) {
@@ -296,11 +296,17 @@ public class DataAccesser {
 
 
 			statement.executeUpdate();
-
-
 		} catch(Exception ex) {
 			System.out.println("Failed to add/update vote: " + ex.getMessage() + "\n" + ex.getStackTrace()[0].getLineNumber() + "\n" + ex.getCause());
-		}
+		} finally {
+	        // Close resources in the reverse order
+	        try {
+	            if (statement != null) statement.close();
+	            if (connection != null) connection.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
 
 	}
 
@@ -314,9 +320,7 @@ public class DataAccesser {
 			statement = connection.prepareStatement(query);
 			statement.setInt(1, accountId);
 			statement.setInt(2, postId);
-
 			resultSet = statement.executeQuery();
-
 			while (resultSet.next()) {
 				int vote = resultSet.getInt("value");
 				return vote;
@@ -324,6 +328,15 @@ public class DataAccesser {
 
 		} catch(Exception ex) {
 			System.out.println("unable to get Post Vote: " + ex.getMessage() + "\n" + ex.getStackTrace());
+		} finally {
+	        // Close resources in the reverse order
+	        try {
+	        	if (resultSet != null) statement.close();
+	            if (statement != null) statement.close();
+	            if (connection != null) connection.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
 		}
 		return 0;
 	}
@@ -348,6 +361,15 @@ public class DataAccesser {
 
 		} catch(Exception ex) {
 			System.out.println("unable to get Post Vote: " + ex.getMessage() + "\n" + ex.getStackTrace());
+		} finally {
+	        // Close resources in the reverse order
+	        try {
+	        	if (resultSet != null) statement.close();
+	            if (statement != null) statement.close();
+	            if (connection != null) connection.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
 		}
 		return 0;
 	}
