@@ -19,12 +19,13 @@ public class Post {
 	private List<Comment> comments;
 
 	// Create post with no embedded image
-	public Post(int postId, int authorId, String title, String textContent, int votes, String timeStamp){
+	public Post(int postId, int authorId, String title, String textContent, String timeStamp){
 		this.postId = postId;
 		this.authorId = authorId;
 		this.title = title;
 		this.textContent = textContent;
-		this.votes = votes;
+		this.votes = DataAccesser.fetchPostVotes(postId);
+		
 		try {
 			this.timeStamp = Instant.parse(timeStamp);
 		} catch(Exception ex) {

@@ -5,6 +5,8 @@ import core.PostManager;
 
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class Sidebar extends JPanel {
     private JButton loginBtn;
@@ -50,10 +52,32 @@ public class Sidebar extends JPanel {
         JPanel timePanel = new JPanel(new BorderLayout());
         JCheckBox timeBtn = new JCheckBox("Time (Days):");
         timeBtn.setFont(Constants.M_FONT);
-        JTextField timeArea = new JTextField(3);
-        timeArea.setFont(Constants.S_FONT);
+        timeBtn.setSelected(true);
+        timeBtn.addActionListener(e->PostManager.setFilterByTime(timeBtn.isSelected()));
+        JTextField timeField = new JTextField(3);
+        timeField.setFont(Constants.S_FONT);
         timePanel.add(timeBtn, BorderLayout.WEST);
-        timePanel.add(timeArea, BorderLayout.EAST);
+        timePanel.add(timeField, BorderLayout.EAST);
+        timeField.setText("7");
+        // Maybe just change this to an actionListener (meaning it waits until you press Enter)
+        timeField.getDocument().addDocumentListener(new DocumentListener(){
+        	public void insertUpdate(DocumentEvent e) {
+        		updateValue();
+        	}
+        	public void removeUpdate(DocumentEvent e) {
+        		updateValue();
+        	}
+        	public void changedUpdate(DocumentEvent e) {} //unused
+        	private void updateValue() {
+        		int value;
+        		try {
+        			value = Integer.parseInt(timeField.getText());
+        		} catch (Exception ex) {
+        			return;
+        		}
+        		PostManager.setTimeFilterDays(value);
+        	}
+        });
         
         JCheckBox followedBtn = new JCheckBox("Followed");
         followedBtn.setFont(Constants.M_FONT);

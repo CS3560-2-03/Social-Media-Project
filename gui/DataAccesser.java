@@ -1,6 +1,7 @@
 package gui;
 import core.Account;
 import core.Comment;
+import core.PostManager;
 
 import java.sql.*;
 import java.time.Instant;
@@ -8,6 +9,69 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataAccesser {
+	
+	// This never gets closed so that PostManager can work with it
+	// Not sure if will cause memory leak?
+	public static ResultSet fetchPostsByVote() {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = connectToDatabase();
+			String query = "SELECT Post.*, SUM(PostVote.value) AS totalVotes " +
+		               "FROM Post " +
+		               "LEFT JOIN PostVote ON Post.postId = PostVote.postId " +
+		               "WHERE Post.TimeStamp > datetime('now', ?) " +
+		               "GROUP BY Post.postId " +
+		               "ORDER BY CASE WHEN totalVotes < 0 THEN 1 ELSE 0 END, totalVotes DESC";
+			statement = connection.prepareStatement(query);
+			statement.setString(1, "-"+PostManager.getTimeFilterDays()+" days");
+			resultSet = statement.executeQuery();
+			return resultSet;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		return resultSet;
+	}
+	
+	
+	public static int fetchPostVotes(int postId) {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		int sum = 0;
+		
+		try {
+			// This can be made more efficient but for now it should work
+			connection = connectToDatabase();
+			statement = connection.prepareStatement("SELECT COUNT(*) FROM PostVote WHERE postId = ? AND value = ?");
+			statement.setInt(1, postId);
+			statement.setInt(2, 1);
+			resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				sum += resultSet.getInt(1);
+			}
+			statement = connection.prepareStatement("SELECT COUNT(*) FROM PostVote WHERE postId = ? AND value = ?");
+			statement.setInt(1, postId);
+			statement.setInt(2, -1);
+			resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				sum -= resultSet.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+	        // Close resources in the reverse order
+	        try {
+	            if (statement != null) statement.close();
+	            if (connection != null) connection.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+		}
+		return sum;
+	}
 	
 	public static void uploadComment(Comment comment) {
 		Connection connection = null;

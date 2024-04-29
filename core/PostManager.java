@@ -1,6 +1,7 @@
 package core;
 
 import database.SQLiteHandler;
+import gui.DataAccesser;
 import gui.Main;
 
 import java.sql.ResultSet;
@@ -10,9 +11,9 @@ import java.util.*;
 public class PostManager {
 	private static List<Post> postList = new ArrayList<Post>();
 	private static boolean sortByVotes = false; // If False, defaults to sorting by new.
-	private static boolean filterByFollowed;
-	private static boolean filterByTime;
-	private static int timeFilterDays;
+	private static boolean filterByFollowed = false;
+	private static boolean filterByTime = true;
+	private static int timeFilterDays = 7;
 
 	private static SQLiteHandler sqLiteHandler = new SQLiteHandler();
 	
@@ -57,6 +58,20 @@ public class PostManager {
 		clearPosts();
 	}
 	
+	public static void setFilterByTime(boolean value) {
+		filterByTime = value;
+		clearPosts();
+	}
+	
+	public static void setTimeFilterDays(int value) {
+		timeFilterDays = value;
+		clearPosts();
+	}
+	
+	public static int getTimeFilterDays() {
+		return timeFilterDays;
+	}
+	
 	private static void clearPosts() {
 		Main.clearPosts();
 		postList.clear();
@@ -64,13 +79,14 @@ public class PostManager {
 	}
 
 	// Fetches posts based on the sort and filter options and adds them to postList
-	// They are fetched from a data file
+	// They are fetched from a database file
 	public static void fetchPosts() {
 		//todo: fetchPosts should get NEW posts, not the same lol
 		ResultSet result;
 		sqLiteHandler.startConnection();
 		if(sortByVotes) {
-			result = sqLiteHandler.getPostsByVote(Constants.POST_GRAB_SIZE, postList.size());
+//			result = sqLiteHandler.getPostsByVote(Constants.POST_GRAB_SIZE, postList.size());
+			result = DataAccesser.fetchPostsByVote();
 		} else {
 			result = sqLiteHandler.getPostsByDate(Constants.POST_GRAB_SIZE, postList.size());
 		}
@@ -80,7 +96,7 @@ public class PostManager {
 		}
 
 		//Try to add posts to postList
-		int id, accountID, votes;
+		int id, accountID;
 		String title, textContent, timeStamp;
 		try {
 			boolean alreadyExists = false;
@@ -89,7 +105,7 @@ public class PostManager {
 					//Check if this post is already instantiated
 					alreadyExists = false;
 					id = result.getInt("postID");
-
+					
 					for(Post p : postList) {
 						if(p.getPostId() == id) {
 							alreadyExists = true;
@@ -101,10 +117,9 @@ public class PostManager {
 						accountID = result.getInt("accountID");
 						title = result.getString("title");
 						textContent = result.getString("textContent");
-						votes = result.getInt("votes");
 						timeStamp = result.getString("timeStamp");
 						//Create a new post and add it to the list
-						Post post = new Post(id, accountID, title, textContent, votes, timeStamp);
+						Post post = new Post(id, accountID, title, textContent, timeStamp);
 
 						postList.add(post);
 

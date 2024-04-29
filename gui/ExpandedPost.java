@@ -100,10 +100,9 @@ public class ExpandedPost extends ScrollablePanel {
             		JOptionPane.showMessageDialog(null, "Please log in to comment");
             		return;
             	}
-            	
             	Comment comment = new Comment(Main.getCurrentAccountId(), post.getPostId(), commentInput.getText());
                 DataAccesser.uploadComment(comment);
-                
+                commentInput.setText("");
                 loadComments();
                 revalidate();
             }

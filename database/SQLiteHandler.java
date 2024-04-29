@@ -87,7 +87,7 @@ public class SQLiteHandler {
             String textContent = result.getString("textContent");
             int votes = result.getInt("votes");
             String timeStamp = result.getString("timeStamp");
-            Post newPost = new Post(id, accountID, title, textContent, votes, timeStamp);
+            Post newPost = new Post(id, accountID, title, textContent, timeStamp);
             return newPost;
         } catch(Exception ex) {
             System.out.println("Unable to create post instance from ResultSet given: " + ex.getMessage());
@@ -97,8 +97,6 @@ public class SQLiteHandler {
     }
 
     public boolean validateAccount(String username, String password){
-
-
         //Used to execute SQLite commands
         PreparedStatement preparedStmt = null;
         String query = "INSERT INTO account(username, password) VALUES(?,?)";
@@ -124,8 +122,6 @@ public class SQLiteHandler {
             //If unable to create an account
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Account already exists.");
-
-            //...
         }
         return false;
     }
@@ -142,51 +138,4 @@ public class SQLiteHandler {
 
         return null;
     }
-
-    /*
-    public core.Post getPost(int id) {
-        core.Post post = null;
-
-        int accountID;
-        String title;
-        String textContent;
-        int votes;
-        String timeStamp;
-        try {
-            String query = "SELECT * from post WHERE postID = " + id + " LIMIT 1;";
-
-            result = statement.executeQuery(query);
-
-            while(result.next()) {
-
-
-                //post = new core.Post(result.getInt("postID"), )
-
-
-                id = result.getInt("postID");
-                accountID = result.getInt("accountID");
-                title = result.getString("title");
-                textContent = result.getString("textContent");
-                votes = result.getInt("votes");
-                timeStamp = result.getString("timeStamp");
-
-
-            }
-            //Should get core.Account i think (but check if we already loaded account??)
-            //Wait how are we loading from database to runtime?
-
-            statement = conn.createStatement();
-            query = "SELECT * from account WHERE accountID = " + accountID + " LIMIT 1;";
-            result = statement.executeQuery(query);
-
-
-
-        } catch(Exception e) {
-            System.out.println("Unable to get post " + id + ": " + e.getMessage());
-        }
-        return post;
-    }
-    */
-
-
 }

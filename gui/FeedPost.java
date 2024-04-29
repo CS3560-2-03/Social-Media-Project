@@ -49,9 +49,7 @@ public class FeedPost extends JPanel {
         });
         String changedDate = GetShortDisplayDate(post.getTimeStamp());
         JLabel date = new JLabel(changedDate);
-        //JLabel date = new JLabel("1, January 2024");
         JLabel votes = new JLabel(String.valueOf(post.getVotes()));
-        //JLabel votes = new JLabel("47");
         date.setFont(Constants.S_FONT);
         votes.setFont(Constants.S_FONT);
 
