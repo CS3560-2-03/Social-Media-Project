@@ -31,11 +31,34 @@ public class FeedPost extends JPanel {
         add(innerPanel, BorderLayout.CENTER);
 
         JTextPane title = makeTextPane(post.getTitle(), Constants.L_FONT);
-        JTextPane author = makeTextPane(post.getAuthor().getDisplayName(), Constants.S_FONT);
+        JPanel authorPanel = new JPanel(new BorderLayout());
+        JTextArea author = new JTextArea(post.getAuthor().getDisplayName());
+        author.setFont(Constants.S_FONT);
+        author.setEditable(false);
+        author.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				author.setForeground(Color.BLUE);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				author.setForeground(Color.BLACK);
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				System.out.println("USER CLICKED");
+			}
+		});
+        author.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        authorPanel.add(author, BorderLayout.WEST);
+        JPanel spacingPanel = new JPanel();
+        spacingPanel.setOpaque(true);
+        spacingPanel.setBackground(Color.WHITE);
+        authorPanel.add(spacingPanel, BorderLayout.CENTER);
         JTextPane content = makeTextPane(truncateContent(post.getTextContent()), Constants.M_FONT);
 
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
-        author.setAlignmentX(Component.LEFT_ALIGNMENT);
+        authorPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         content.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         
@@ -60,7 +83,7 @@ public class FeedPost extends JPanel {
         utilityBar.add(votes, BorderLayout.EAST);
 
         innerPanel.add(title);
-        innerPanel.add(author);
+        innerPanel.add(authorPanel);
         innerPanel.add(content);
         add(utilityBar, BorderLayout.SOUTH);
 	}
