@@ -220,7 +220,138 @@ public class DataAccesser {
 	    }
 		return result;
 	}
-	
+
+
+	public static void uploadPostVote(int accountId, int postId, int newValue) {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+
+		try {
+			connection = connectToDatabase();
+			String query = "UPDATE PostVote SET value = ? WHERE accountId = ? AND postId = ?;";
+
+
+			statement = connection.prepareStatement(query);
+
+			statement.setInt(1, newValue);
+			statement.setInt(2, accountId);
+			statement.setInt(3, postId);
+
+			statement.executeUpdate();
+
+					//Insert a new record if one doesn't exist
+			query = "INSERT INTO PostVote (accountId, postId, value)\n" +
+					"SELECT ?, ?, ?\n" +
+					"WHERE NOT EXISTS (\n" +
+					"    SELECT 1 FROM PostVote WHERE accountId = ? AND postId = ?\n" +
+					");";
+			statement = connection.prepareStatement(query);
+			statement.setInt(1, accountId);
+			statement.setInt(2, postId);
+			statement.setInt(3, newValue);
+			statement.setInt(4, accountId);
+			statement.setInt(5, postId);
+
+
+			statement.executeUpdate();
+
+		} catch(Exception ex) {
+			System.out.println("Failed to add/update vote: " + ex.getMessage() + "\n" + ex.getStackTrace()[0].getLineNumber() + "\n" + ex.getCause());
+		}
+
+	}
+
+	public static void uploadCommentVote(int accountId, int commentId, int newValue) {
+		Connection connection = null;
+		PreparedStatement statement = null;
+
+
+		try {
+			connection = connectToDatabase();
+
+			String query = "UPDATE CommentVote SET value = ? WHERE accountId = ? AND commentId = ?;";
+
+
+			statement = connection.prepareStatement(query);
+
+			statement.setInt(1, newValue);
+			statement.setInt(2, accountId);
+			statement.setInt(3, commentId);
+
+			statement.executeUpdate();
+
+			//Insert a new record if one doesn't exist
+			query = "INSERT INTO CommentVote (accountId, commentId, value)\n" +
+					"SELECT ?, ?, ?\n" +
+					"WHERE NOT EXISTS (\n" +
+					"    SELECT 1 FROM CommentVote WHERE accountId = ? AND commentId = ?\n" +
+					");";
+			statement = connection.prepareStatement(query);
+			statement.setInt(1, accountId);
+			statement.setInt(2, commentId);
+			statement.setInt(3, newValue);
+			statement.setInt(4, accountId);
+			statement.setInt(5, commentId);
+
+
+			statement.executeUpdate();
+
+
+		} catch(Exception ex) {
+			System.out.println("Failed to add/update vote: " + ex.getMessage() + "\n" + ex.getStackTrace()[0].getLineNumber() + "\n" + ex.getCause());
+		}
+
+	}
+
+	public static int getPostVote(int accountId, int postId) {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = connectToDatabase();
+			String query = "SELECT value FROM PostVote WHERE accountId = ? AND postId = ?;";
+			statement = connection.prepareStatement(query);
+			statement.setInt(1, accountId);
+			statement.setInt(2, postId);
+
+			resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				int vote = resultSet.getInt("value");
+				return vote;
+			}
+
+		} catch(Exception ex) {
+			System.out.println("unable to get Post Vote: " + ex.getMessage() + "\n" + ex.getStackTrace());
+		}
+		return 0;
+	}
+
+	public static int getCommentVote(int accountId, int commentId) {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = connectToDatabase();
+			String query = "SELECT value FROM CommentVote WHERE accountId = ? AND commentId = ?;";
+			statement = connection.prepareStatement(query);
+			statement.setInt(1, accountId);
+			statement.setInt(2, commentId);
+
+			resultSet = statement.executeQuery();
+
+			while (resultSet.next()) {
+				int vote = resultSet.getInt("value");
+				return vote;
+			}
+
+		} catch(Exception ex) {
+			System.out.println("unable to get Post Vote: " + ex.getMessage() + "\n" + ex.getStackTrace());
+		}
+		return 0;
+	}
+
 	//Connects to databases needed for program to function
   	private static Connection connectToDatabase() {
   		Connection c = null;
@@ -233,4 +364,7 @@ public class DataAccesser {
   			return null;
   		}
   	}
+
+
+
 }

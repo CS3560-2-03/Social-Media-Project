@@ -19,6 +19,7 @@ import java.util.List;
 public class ExpandedPost extends ScrollablePanel {
 	private JPanel commentSection;
 	private Post post;
+
 	
     public ExpandedPost(Post post){
     	this.post = post;
@@ -54,10 +55,9 @@ public class ExpandedPost extends ScrollablePanel {
         JPanel voteBlock = new JPanel();
         voteBlock.setBackground(Color.WHITE);
         JLabel voteText = new JLabel(String.valueOf(post.getVotes()));
-        //JLabel voteText = new JLabel("47");
         voteText.setFont(Constants.S_FONT);
-        VoteArrow upvote = new VoteArrow(Constants.UP);
-        VoteArrow downvote = new VoteArrow(Constants.DOWN);
+        VoteArrow upvote = new VoteArrow(Constants.UP, post, voteText);
+        VoteArrow downvote = new VoteArrow(Constants.DOWN, post, voteText);
         upvote.setPair(downvote);
         
         voteBlock.add(upvote);

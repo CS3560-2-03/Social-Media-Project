@@ -10,6 +10,6 @@ public class Constants {
     public static final int MAX_ZOOM = 12;
     public static final int MIN_ZOOM = 0;
     public static final int UP = 1;
-    public static final int DOWN = 3;
+    public static final int DOWN = -1;
     public static final int POST_GRAB_SIZE = 50;
 }

@@ -49,8 +49,8 @@ public class CommentBlock extends JPanel {
         voteBlock.setBackground(Color.WHITE);
         JLabel voteText = new JLabel(comment.getVotes()+"");
         voteText.setFont(Constants.S_FONT);
-        VoteArrow upvote = new VoteArrow(Constants.UP);
-        VoteArrow downvote = new VoteArrow(Constants.DOWN);
+        VoteArrow upvote = new VoteArrow(Constants.UP, comment, voteText);
+        VoteArrow downvote = new VoteArrow(Constants.DOWN, comment, voteText);
         upvote.setPair(downvote);
         
         voteBlock.add(upvote);

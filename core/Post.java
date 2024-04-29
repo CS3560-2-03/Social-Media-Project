@@ -69,6 +69,12 @@ public class Post {
 		
 	}
 
+	public int refetchVotes() {
+		votes = DataAccesser.fetchPostVotes(postId);
+		return votes;
+	}
+
+
 	public int getPostId() {
 		return postId;
 	}

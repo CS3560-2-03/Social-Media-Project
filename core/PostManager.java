@@ -85,11 +85,10 @@ public class PostManager {
 	// Fetches posts based on the sort and filter options and adds them to postList
 	// They are fetched from a database file
 	public static void fetchPosts() {
-		//todo: fetchPosts should get NEW posts, not the same lol
 		ResultSet result;
 		sqLiteHandler.startConnection();
 		if(sortByVotes) {
-//			result = sqLiteHandler.getPostsByVote(Constants.POST_GRAB_SIZE, postList.size());
+			//result = sqLiteHandler.getPostsByVote(Constants.POST_GRAB_SIZE, postList.size());
 			result = DataAccesser.fetchPostsByVote();
 		} else {
 			result = sqLiteHandler.getPostsByDate(Constants.POST_GRAB_SIZE, postList.size());

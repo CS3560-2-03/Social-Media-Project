@@ -1,5 +1,7 @@
 package gui;
 
+import core.Comment;
+import core.Post;
 import core.Constants;
 
 import javax.swing.*;
@@ -9,12 +11,18 @@ public class VoteArrow extends JLabel {
 	String imagePrefix;
 	boolean selected;
 	VoteArrow pair;
+	Comment commentRef;
+	Post postRef;
+	JLabel voteText;
+
+
 	
 	// Use Constants.UP for up, and Constants.DOWN for down.
 	// Using SwingConstants.NORTH and SwingConstants.SOUTH also work.
-	public VoteArrow(int direction) {
+	private VoteArrow(int direction, JLabel voteText) {
 		selected = false;
 		pair = null;
+		this.voteText = voteText;
 		
 		// Prefix for path to image 
 		if (direction == Constants.UP) {
@@ -46,6 +54,34 @@ public class VoteArrow extends JLabel {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
+
+				//Tell the user they must log in if they are not logged in
+				if(!Main.isLoggedIn()) {
+					JOptionPane.showMessageDialog(null, "Must be logged in to vote.");
+					return;
+				} else {
+					//accountId grabbed on separate line for better error tracing
+					int accountId = Main.getCurrentAccountId();
+
+					//One of these should not be null
+					if(postRef != null) {
+						DataAccesser.uploadPostVote(accountId, postRef.getPostId(), direction);
+
+						voteText.setText(String.valueOf(postRef.refetchVotes()));
+					} else if(commentRef != null) {
+						DataAccesser.uploadCommentVote(accountId, commentRef.getCommentId(), direction);
+
+						voteText.setText(String.valueOf(commentRef.refetchVotes()));
+					} else {
+						System.out.println("VoteArrow had no reference to the comment/post it was attached to");
+						JOptionPane.showMessageDialog(null, "There was an error getting post/comment information. Please try refreshing the page.");
+
+
+					}
+				}
+
+
+
 				if (!selected) {
 					setSelected(true);
 					if (pair != null) {
@@ -61,7 +97,34 @@ public class VoteArrow extends JLabel {
 			}
 		});
 	}
-	
+
+	public VoteArrow(int direction, Post post, JLabel voteText) {
+		this(direction, voteText);
+		postRef = post;
+
+		//Autofill vote if user already voted
+		if(Main.isLoggedIn()) {
+			int currentVote = DataAccesser.getPostVote(Main.getCurrentAccountId(), postRef.getPostId());
+			if(direction == currentVote) {
+				setSelected(true);
+			}
+		}
+	}
+
+	public VoteArrow(int direction, Comment comment, JLabel voteText) {
+		this(direction, voteText);
+		commentRef = comment;
+
+		//Autofill vote if user already voted
+		if(Main.isLoggedIn()) {
+			int currentVote = DataAccesser.getCommentVote(Main.getCurrentAccountId(), commentRef.getCommentId());
+			if(direction == currentVote) {
+				setSelected(true);
+			}
+		}
+	}
+
+
 	public void setPair(VoteArrow pairArrow) {
 		if (pairArrow == pair) {
 			return;
@@ -82,4 +145,7 @@ public class VoteArrow extends JLabel {
 			setIcon(new ImageIcon(getClass().getResource(imagePrefix+"_white.png")));
 		}
 	}
+
+
+
 }

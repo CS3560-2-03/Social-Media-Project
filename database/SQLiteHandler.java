@@ -9,6 +9,7 @@ import java.util.List;
 
 public class SQLiteHandler {
 
+    public static SQLiteHandler instance;
     String url = "jdbc:sqlite:database/main.db";
 
     Connection conn;
@@ -16,7 +17,12 @@ public class SQLiteHandler {
     String query;
     ResultSet result;
 
-
+    public static SQLiteHandler Instance() {
+        if(instance == null) {
+            instance = new SQLiteHandler();
+        }
+        return instance;
+    }
 
     public boolean startConnection() {
         //Try checking for needed sqlite drivers
@@ -107,7 +113,7 @@ public class SQLiteHandler {
     public boolean validateAccount(String username, String password){
         //Used to execute SQLite commands
         PreparedStatement preparedStmt = null;
-        String query = "INSERT INTO account(username, password) VALUES(?,?)";
+        query = "INSERT INTO account(username, password) VALUES(?,?)";
 
         try {
 
@@ -136,7 +142,7 @@ public class SQLiteHandler {
 
     public ResultSet getAccountById(int accountId) {
         try {
-            String query = "SELECT * FROM account where accountID = " + accountId + ";";
+            query = "SELECT * FROM account where accountID = " + accountId + ";";
 
             result = statement.executeQuery(query);
             return result;
@@ -146,4 +152,7 @@ public class SQLiteHandler {
 
         return null;
     }
+
+
+
 }

@@ -61,7 +61,12 @@ public class Comment {
 	public int getAccountId() {
 		return accountId;
 	}
-	
+
+	public int refetchVotes() {
+		votes = DataAccesser.fetchCommentVotes(commentId);
+		return votes;
+	}
+
 	public int getVotes() {
 		return votes;
 	}
