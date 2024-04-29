@@ -1,6 +1,7 @@
 package database;
 
 import core.Post;
+import core.PostManager;
 
 import javax.swing.*;
 import java.sql.*;
@@ -55,8 +56,15 @@ public class SQLiteHandler {
 
     public ResultSet getPostsByDate(int limit, int offset) {
         try {
-            String query = "SELECT * FROM post ORDER BY timeStamp DESC LIMIT " + limit + " OFFSET " + offset + ";";
-
+        	String timeFilterQuery = "";
+    		if (PostManager.getFilterByTime()) {
+    			String dayString = "-"+PostManager.getTimeFilterDays()+" days";
+    			timeFilterQuery = " WHERE Post.TimeStamp > datetime('now', '"+dayString+"') ";
+    		}
+            String query = "SELECT * FROM post " +
+            		timeFilterQuery +
+            		"ORDER BY timeStamp DESC LIMIT " + limit +
+            		" OFFSET " + offset;
             result = statement.executeQuery(query);
             return result;
         } catch(Exception ex) {

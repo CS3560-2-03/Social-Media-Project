@@ -21,7 +21,8 @@ public class DataAccesser {
 		
 		String timeFilterQuery = "";
 		if (PostManager.getFilterByTime()) {
-			timeFilterQuery = "WHERE Post.TimeStamp > datetime('now', ?) ";
+			String dayString = "-"+PostManager.getTimeFilterDays()+" days";
+			timeFilterQuery = "WHERE Post.TimeStamp > datetime('now', '"+dayString+"') ";
 		}
 		
 		try {
@@ -33,9 +34,6 @@ public class DataAccesser {
 		               "GROUP BY Post.postId " +
 		               "ORDER BY CASE WHEN totalVotes < 0 THEN 1 ELSE 0 END, totalVotes DESC";
 			statement = connection.prepareStatement(query);
-			if (PostManager.getFilterByTime()) {
-				statement.setString(1, "-"+PostManager.getTimeFilterDays()+" days");
-			}
 			resultSet = statement.executeQuery();
 			return resultSet;
 		} catch (SQLException e) {
