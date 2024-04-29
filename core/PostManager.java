@@ -63,6 +63,10 @@ public class PostManager {
 		clearPosts();
 	}
 	
+	public static boolean getFilterByTime() {
+		return filterByTime;
+	}
+	
 	public static void setTimeFilterDays(int value) {
 		timeFilterDays = value;
 		clearPosts();

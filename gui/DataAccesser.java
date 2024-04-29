@@ -10,23 +10,32 @@ import java.util.List;
 
 public class DataAccesser {
 	
-	// This never gets closed so that PostManager can work with it
-	// Not sure if will cause memory leak?
+	// Fetch posts, sorted by votes.
+	// Also filters based on PostManager's time filter variables
 	public static ResultSet fetchPostsByVote() {
+		// This never gets closed so that PostManager can work with it
+		// Not sure if will cause memory leak?
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
+		
+		String timeFilterQuery = "";
+		if (PostManager.getFilterByTime()) {
+			timeFilterQuery = "WHERE Post.TimeStamp > datetime('now', ?) ";
+		}
 		
 		try {
 			connection = connectToDatabase();
 			String query = "SELECT Post.*, SUM(PostVote.value) AS totalVotes " +
 		               "FROM Post " +
 		               "LEFT JOIN PostVote ON Post.postId = PostVote.postId " +
-		               "WHERE Post.TimeStamp > datetime('now', ?) " +
+		               timeFilterQuery +
 		               "GROUP BY Post.postId " +
 		               "ORDER BY CASE WHEN totalVotes < 0 THEN 1 ELSE 0 END, totalVotes DESC";
 			statement = connection.prepareStatement(query);
-			statement.setString(1, "-"+PostManager.getTimeFilterDays()+" days");
+			if (PostManager.getFilterByTime()) {
+				statement.setString(1, "-"+PostManager.getTimeFilterDays()+" days");
+			}
 			resultSet = statement.executeQuery();
 			return resultSet;
 		} catch (SQLException e) {
