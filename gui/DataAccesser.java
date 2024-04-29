@@ -44,6 +44,43 @@ public class DataAccesser {
 		return resultSet;
 	}
 	
+	public static int fetchCommentVotes(int commentId) {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		int sum = 0;
+		
+		try {
+			// This can be made more efficient but for now it should work
+			connection = connectToDatabase();
+			statement = connection.prepareStatement("SELECT COUNT(*) FROM CommentVote WHERE commentId = ? AND value = ?");
+			statement.setInt(1, commentId);
+			statement.setInt(2, 1);
+			resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				sum += resultSet.getInt(1);
+			}
+			statement = connection.prepareStatement("SELECT COUNT(*) FROM CommentVote WHERE commentId = ? AND value = ?");
+			statement.setInt(1, commentId);
+			statement.setInt(2, -1);
+			resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				sum -= resultSet.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+	        // Close resources in the reverse order
+	        try {
+	            if (statement != null) statement.close();
+	            if (connection != null) connection.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+		}
+		return sum;
+	}
+	
 	
 	public static int fetchPostVotes(int postId) {
 		Connection connection = null;
@@ -110,6 +147,7 @@ public class DataAccesser {
 	}
 	
 	// Returns an array of comments based on a postId
+	// Sorts them based on votes
 	public static List<Comment> fetchComments(int postId) {
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -118,7 +156,13 @@ public class DataAccesser {
 		
 		try {
 			connection = connectToDatabase();
-			statement = connection.prepareStatement("SELECT * FROM comment WHERE postId = ?");
+			String query = "SELECT Comment.*, SUM(CommentVote.value) AS totalVotes " +
+		               "FROM Comment " +
+		               "LEFT JOIN CommentVote ON Comment.CommentId = CommentVote.CommentId " +
+		               "WHERE Comment.postId = ? " +
+		               "GROUP BY Comment.CommentId " +
+		               "ORDER BY CASE WHEN totalVotes < 0 THEN 1 ELSE 0 END, totalVotes DESC";
+			statement = connection.prepareStatement(query);
 			statement.setInt(1, postId);
 			resultSet = statement.executeQuery();
 			

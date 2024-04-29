@@ -19,7 +19,7 @@ public class Comment {
 		this.accountId = accountId;
 		this.postId = postId;
 		this.content = content;
-		votes = 0;
+		this.votes = DataAccesser.fetchCommentVotes(commentId);
 		this.timeStamp = timeStamp;
 		
 		author = DataAccesser.fetchAccount(accountId);
