@@ -26,7 +26,7 @@ public class GuiPrototype {
     public GuiPrototype(){
         zoomLvl = 4;
         cl = CardManager.cardLayout;
-        cards = CardManager.cards;
+        //cards = CardManager.cards;
 
         postManager = new PostManager();
 
@@ -39,13 +39,13 @@ public class GuiPrototype {
         setupContentFeed(frame);
         setupPostLoading();
 
-        sidebar = new Sidebar();
+        sidebar = Sidebar.getSidebar();
         frame.add(sidebar, BorderLayout.WEST);
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-        JPanel loginCard = new LoginScreen((Sidebar)sidebar);
+        JPanel loginCard = new LoginScreen();
         cards.add(loginCard, "loginScreen");
         JPanel accountCreation = new AccountCreationScreen();
         cards.add(accountCreation, "accountCreationScreen");

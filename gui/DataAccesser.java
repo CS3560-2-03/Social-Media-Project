@@ -123,12 +123,11 @@ public class DataAccesser {
 		
 		try {
 			connection = connectToDatabase();
-			statement = connection.prepareStatement("INSERT INTO comment(postId, accountId, content, votes, timeStamp) VALUES(?,?,?,?,?)");
+			statement = connection.prepareStatement("INSERT INTO comment( postId, accountId, content, timeStamp) VALUES(?,?,?,?)");
 			statement.setInt(1, comment.getPostId());
 			statement.setInt(2, comment.getAccountId());
 			statement.setString(3, comment.getContent());
-			statement.setInt(4, comment.getVotes());
-			statement.setString(5, Instant.now().toString());
+			statement.setString(4, Instant.now().toString());
 			
 			statement.executeUpdate();
 		} catch (SQLException e) {

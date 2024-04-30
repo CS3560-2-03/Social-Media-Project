@@ -8,7 +8,7 @@ import javax.swing.*;
 public class PostCreation extends ScrollablePanel {
     public PostCreation(){
     	CardLayout cl = CardManager.cardLayout;
-    	JPanel cards = CardManager.cards;
+    	JPanel cards = null;
     	
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
