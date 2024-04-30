@@ -7,14 +7,18 @@ import core.Post;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.net.URL;
 
 public class ExpandedPost extends ScrollablePanel {
 	private JPanel commentSection;
@@ -58,11 +62,34 @@ public class ExpandedPost extends ScrollablePanel {
         spacingPanel.setOpaque(true);
         spacingPanel.setBackground(Color.WHITE);
         authorPanel.add(spacingPanel, BorderLayout.CENTER);
+        
+        JLabel imageLabel = new JLabel();
+        if (post.getEmbedLink() != null) {
+        	try {
+            	System.out.println("LOADING IMAGE: " + post.getEmbedLink());
+            	Image image = ImageIO.read(new URL(post.getEmbedLink()));
+            	int width = Main.getContentFeed().getWidth();
+            	if (image.getWidth(null) > width) {
+            		int newHeight = (int) (image.getHeight(null) * ((double) width / image.getWidth(null)));
+            		image = image.getScaledInstance(width, newHeight, Image.SCALE_SMOOTH);
+            	}
+            	imageLabel = new JLabel(new ImageIcon(image));
+            } catch (IOException e) {
+            	e.printStackTrace();
+            	imageLabel = new JLabel("Image failed to load.", SwingConstants.CENTER);
+            	imageLabel.setFont(Constants.L_FONT);
+            	imageLabel.setOpaque(true);
+            	imageLabel.setBackground(Color.WHITE);
+            }
+        }
+        
+        
         JTextPane content = makeTextPane(post.getTextContent(), Constants.M_FONT);
 
         add(title, gbc);
         add(authorPanel, gbc);
         add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
+        add(imageLabel, gbc);
         add(content, gbc);
         add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
 

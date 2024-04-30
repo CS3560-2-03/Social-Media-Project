@@ -94,9 +94,6 @@ public class Sidebar {
         	}
         });
         
-        JCheckBox followedBtn = new JCheckBox("Followed");
-        followedBtn.setFont(Constants.M_FONT);
-        
         //  FOLLOWING
         JLabel followingLbl = new JLabel("Following", SwingConstants.CENTER);
         followingLbl.setFont(Constants.L_FONT);
@@ -130,7 +127,6 @@ public class Sidebar {
         sidebar.add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
         sidebar.add(filterLbl, gbc);
         sidebar.add(timePanel, gbc);
-        sidebar.add(followedBtn, gbc);
         sidebar.add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
         sidebar.add(followingLbl, gbc);
         
@@ -177,17 +173,27 @@ public class Sidebar {
     	
     	nameLbl.setCursor(new Cursor(Cursor.HAND_CURSOR));
     	nameLbl.addMouseListener(new MouseAdapter() {
-    		@Override
+    		List<Account> userFilter = PostManager.getUserFilter();
+    		
 			public void mouseEntered(MouseEvent e) {
     			nameLbl.setBackground(Color.decode("#DDDDDD"));
 			}
-			@Override
 			public void mouseExited(MouseEvent e) {
-				nameLbl.setBackground(Color.WHITE);
+				if (!userFilter.contains(account)) {
+					nameLbl.setBackground(Color.WHITE);
+				}
 			}
-			@Override
+			// On click, if not selected, add to user filter.
+			// If selected, remove from user filter.
+			// Changes color appropriately too
             public void mouseClicked(MouseEvent e) {
-                System.out.println("FOLLOWED USER CLICKED");
+				if (!userFilter.contains(account)) {
+					PostManager.addUserFilter(account);
+					nameLbl.setBackground(Color.decode("#CCCCCC"));
+				} else {
+					PostManager.removeUserFilter(account);
+					nameLbl.setBackground(Color.WHITE);
+				}
             }
         });
     	xBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));

@@ -28,6 +28,10 @@ public class Main {
         SwingUtilities.invokeLater(Main::launch);
     }
     
+    public static ScrollablePanel getContentFeed() {
+    	return contentFeed;
+    }
+    
     public static void setCurrentAccountId(int accId) {
     	currentAccountId = accId;
     	isLoggedIn = true;
