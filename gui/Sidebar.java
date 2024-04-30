@@ -208,6 +208,7 @@ public class Sidebar {
 			}
 			@Override
             public void mouseClicked(MouseEvent e) {
+				PostManager.removeUserFilter(account);
                 DataAccesser.removeFollow(account.getId());
                 Sidebar.displayFollowedUsers();
             }

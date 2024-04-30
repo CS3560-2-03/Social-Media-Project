@@ -1,5 +1,6 @@
 package database;
 
+import core.Account;
 import core.Post;
 import core.PostManager;
 
@@ -60,55 +61,6 @@ public class SQLiteHandler {
         }
     }
 
-    public ResultSet getPostsByDate(int limit, int offset) {
-        try {
-        	String timeFilterQuery = "";
-    		if (PostManager.getFilterByTime()) {
-    			String dayString = "-"+PostManager.getTimeFilterDays()+" days";
-    			timeFilterQuery = " WHERE Post.TimeStamp > datetime('now', '"+dayString+"') ";
-    		}
-            String query = "SELECT * FROM post " +
-            		timeFilterQuery +
-            		"ORDER BY timeStamp DESC LIMIT " + limit +
-            		" OFFSET " + offset;
-            result = statement.executeQuery(query);
-            return result;
-        } catch(Exception ex) {
-            System.out.println("Failed to getPosts: " + ex.getMessage());
-        }
-
-        return null;
-    }
-
-    public ResultSet getPostsByVote(int limit, int offset) {
-        try {
-            String query = "SELECT * FROM post ORDER BY votes DESC LIMIT " + limit + " OFFSET " + offset + ";";
-
-            result = statement.executeQuery(query);
-            return result;
-        } catch(Exception ex) {
-            System.out.println("Failed to getPosts: " + ex.getMessage());
-        }
-
-        return null;
-    }
-
-    public Post createPost(ResultSet retrived) {
-        try {
-            int id = result.getInt("postID");
-            int accountID = result.getInt("accountID");
-            String title = result.getString("title");
-            String textContent = result.getString("textContent");
-            int votes = result.getInt("votes");
-            String timeStamp = result.getString("timeStamp");
-            Post newPost = new Post(id, accountID, title, textContent, timeStamp);
-            return newPost;
-        } catch(Exception ex) {
-            System.out.println("Unable to create post instance from ResultSet given: " + ex.getMessage());
-        }
-
-        return null;
-    }
 
     public boolean validateAccount(String username, String password){
         //Used to execute SQLite commands

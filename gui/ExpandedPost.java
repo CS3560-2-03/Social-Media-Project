@@ -52,6 +52,10 @@ public class ExpandedPost extends ScrollablePanel {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if (!Main.isLoggedIn()) {
+					JOptionPane.showMessageDialog(null, "Please log in to follow users");
+					return;
+				}
 				DataAccesser.uploadFollow(post.getAuthor().getId());
 				Sidebar.displayFollowedUsers();
 			}

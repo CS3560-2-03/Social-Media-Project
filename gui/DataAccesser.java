@@ -10,6 +10,49 @@ import java.util.List;
 
 public class DataAccesser {
 	
+	public static ResultSet fetchPostsByDate(int limit, int offset) {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet result = null;
+		
+        try {
+        	connection = connectToDatabase();
+        	
+        	// Checks for time filter. Generates query appropriately
+        	String timeFilterQuery = "";
+    		if (PostManager.getFilterByTime()) {
+    			String dayString = "-"+PostManager.getTimeFilterDays()+" days";
+    			timeFilterQuery = " WHERE Post.TimeStamp > datetime('now', '"+dayString+"') ";
+    		}
+    		// Checks for user filter. Generates query appropriately
+    		List<Account> userFilter = PostManager.getUserFilter();
+    		String userFilterQuery="";
+    		if (userFilter.size() > 0) {
+    			userFilterQuery = PostManager.getFilterByTime() ? " AND " : " WHERE ";
+    			userFilterQuery+="accountId IN (";
+    			for (int i=0; i<userFilter.size(); i++) {
+    				if (i>0) {
+    					userFilterQuery+=",";
+    				}
+    				userFilterQuery += userFilter.get(i).getId();
+    			}
+    			userFilterQuery+=") ";
+    		}
+			
+    		// Create full query
+            String query = "SELECT * FROM post " +
+            		timeFilterQuery + userFilterQuery +
+            		"ORDER BY timeStamp DESC LIMIT " + limit +
+            		" OFFSET " + offset;
+            
+            statement = connection.prepareStatement(query);
+            result = statement.executeQuery();
+        } catch(Exception ex) {
+            System.out.println("Failed to getPosts: " + ex.getMessage());
+        }
+        return result;
+    }
+	
 	// Fetch posts, sorted by votes.
 	// Also filters based on PostManager's time filter variables
 	public static ResultSet fetchPostsByVote() {

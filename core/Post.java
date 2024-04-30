@@ -34,6 +34,12 @@ public class Post {
 		}
 		this.author = DataAccesser.fetchAccount(authorId);
 	}
+	
+	// Create post with embedded image
+		public Post(int postId, int authorId, String title, String embedLink, String textContent, String timeStamp){
+			this(postId, authorId, title, textContent, timeStamp);
+			this.embedLink = embedLink;
+		}
 
 	//Connects to databases needed for program to function
   	private Connection connectToDatabase() {
@@ -48,21 +54,6 @@ public class Post {
   			return null;
   		}
   	}
-
-	// Expands post, displaying full content and comments
-	public void expand(){
-
-	}
-
-	// Increment votes by 1
-	public void upvote(){
-
-	}
-
-	// Decrement votes by 1
-	public void downvote(){
-
-	}
 
 	// Embed link cannot be edited, only removed
 	public void removeEmbed(){
@@ -88,22 +79,16 @@ public class Post {
 		return textContent;
 	}
 
-	public void setTextContent(String content){
-
-	}
-
 	public String getTitle(){
 		return title;
 	}
 
-	public void setTitle(String title){
-
+	public String getTimeStamp() { 
+		return timeStamp.toString(); 
 	}
 
-	public String getTimeStamp() { return timeStamp.toString(); }
-
 	public String getEmbedLink(){
-		return null;
+		return embedLink;
 	}
 
 	public Account getAuthor(){

@@ -46,7 +46,7 @@ public class LoginScreen extends JPanel {
         createAccLbl.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-            	CardManager.cardLayout.show(CardManager.cardDisplay, "accountCreationScreen");
+            	CardManager.cardLayout.show(CardManager.cardDisplay, CardManager.ACCOUNT_CREATE);
             }
         });
         add(createAccLbl, gbc);

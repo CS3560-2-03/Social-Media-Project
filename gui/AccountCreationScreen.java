@@ -63,15 +63,10 @@ public class AccountCreationScreen extends JPanel {
 	//If unable to connect to database, return null and print error message in console
 	public static Connection connectToDatabase() {
 		Connection c = null;
-
 		try {
 			String url = "jdbc:sqlite:database/main.db";
-
-			//Try to connect to our databases
 			c = DriverManager.getConnection(url);
-
 			System.out.println("Connection to database was successful.");
-
 			return c;
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -94,27 +89,17 @@ public class AccountCreationScreen extends JPanel {
 
             //"Prepare" the query
             preparedStmt = c.prepareStatement(query);
-
-            //***These setStrings are to set the arugments for INSERT INTO command***
-            //Refers to first ? in the query
             preparedStmt.setString(1, username);
-            //Refers to second ? in the query
             preparedStmt.setString(2, password);
-             //Refers to third ? in the query
-             preparedStmt.setString(3, displayName);
-
+            preparedStmt.setString(3, displayName);
             //Execute the actual query
             preparedStmt.executeUpdate();
-
             JOptionPane.showMessageDialog(null, "Account created!");
-
-            //...
 
         //If unable to create an account
         } catch (Exception e) {
+        	e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Account already exists.");
-
-            //...
         }
     }
 }
