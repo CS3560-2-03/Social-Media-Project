@@ -46,7 +46,8 @@ public class FeedPost extends JPanel {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.out.println("USER CLICKED");
+				DataAccesser.uploadFollow(post.getAuthor().getId());
+				Sidebar.displayFollowedUsers();
 			}
 		});
         author.setCursor(new Cursor(Cursor.HAND_CURSOR));

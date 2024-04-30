@@ -22,8 +22,7 @@ public class Main {
     private static CardLayout cl;
     private static int zoomLvl;
     private static JScrollPane sp;
-    private static Sidebar sidebar;
-    
+    private static JPanel sidebar;
     private static boolean isLoggedIn;
     private static int currentAccountId;
     
@@ -34,7 +33,7 @@ public class Main {
     public static void setCurrentAccountId(int accId) {
     	currentAccountId = accId;
     	isLoggedIn = true;
-    	sidebar.enablePostBtn(true);
+    	Sidebar.enablePostBtn(true);
     }
     
     public static int getCurrentAccountId() {
@@ -59,13 +58,13 @@ public class Main {
         setupContentFeed(frame);
         setupPostLoading();
 
-        sidebar = new Sidebar();
+        sidebar = Sidebar.getSidebar();
         frame.add(sidebar, BorderLayout.WEST);
 
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-        JPanel loginCard = new LoginScreen((Sidebar)sidebar);
+        JPanel loginCard = new LoginScreen();
         cards.add(loginCard, "loginScreen");
         JPanel accountCreation = new AccountCreationScreen();
         cards.add(accountCreation, "accountCreationScreen");
@@ -73,9 +72,31 @@ public class Main {
         postCreation.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
         cards.add(postCreation, "postCreationScreen");
 
-        // This sets up a global key listener. Used for zooming in and out with Ctrl+ or Ctrl-
-        //Toolkit.getDefaultToolkit().addAWTEventListener(new GlobalKeyListener(), AWTEvent.KEY_EVENT_MASK);
-
+        // Global key listener using KeyboardFocusManager
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+            private boolean ctrlPressed = false;
+            @Override
+            public boolean dispatchKeyEvent(KeyEvent event) {
+            	if (event instanceof KeyEvent) {
+                    KeyEvent keyEvent = (KeyEvent) event;
+                    if (keyEvent.getID() == KeyEvent.KEY_PRESSED) {
+                        if (keyEvent.getKeyCode() == KeyEvent.VK_EQUALS && keyEvent.isControlDown() && zoomLvl < Constants.MAX_ZOOM) {
+                            zoomLvl++;
+                            contentFeed.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
+                            changeFontSize(contentFeed, 2);
+                            changeFontSize(sidebar, 2);
+                        } else if (keyEvent.getKeyCode() == KeyEvent.VK_MINUS && keyEvent.isControlDown() && zoomLvl > Constants.MIN_ZOOM) {
+                            zoomLvl--;
+                            contentFeed.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
+                            changeFontSize(contentFeed, -2);
+                            changeFontSize(sidebar, -2);
+                        }
+                    }
+                }
+            	return false;
+            }
+        });
+        
         cards.add(sp, "home");
         cl.show(cards, "home");
         frame.add(cards, BorderLayout.CENTER);
@@ -114,50 +135,36 @@ public class Main {
         });
     }
 
-    // This is a global key listener. It's used for detecting Ctrl+ and Ctrl- for zooming.
-    // Maybe make this its own public file in the future so it can be used across classes
-//    private class GlobalKeyListener implements AWTEventListener {
-//            @Override
-//            public void eventDispatched(AWTEvent event) {
-//                if (event instanceof KeyEvent) {
-//                    KeyEvent keyEvent = (KeyEvent) event;
-//                    if (keyEvent.getID() == KeyEvent.KEY_PRESSED) {
-//                        if (keyEvent.getKeyCode() == KeyEvent.VK_EQUALS && keyEvent.isControlDown() && zoomLvl < Constants.MAX_ZOOM) {
-//                            zoomLvl++;
-//                            contentFeed.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
-//                            changeFontSize(contentFeed, 2);
-//                            changeFontSize(sidebar, 2);
-//                        } else if (keyEvent.getKeyCode() == KeyEvent.VK_MINUS && keyEvent.isControlDown() && zoomLvl > Constants.MIN_ZOOM) {
-//                            zoomLvl--;
-//                            contentFeed.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
-//                            changeFontSize(contentFeed, -2);
-//                            changeFontSize(sidebar, -2);
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//
-//    // Maybe just refactor and put this into GlobalKeyListener 
-//    // Takes a component and amount.
-//    // Goes through every subcomponent and increases the font size of JLabels or JButtons
-//    private void changeFontSize(Container container, int amount) {
-//        for (Component comp : container.getComponents()) {
-//            if (comp instanceof JLabel) {
-//                JLabel label = (JLabel) comp;
-//                Font currentFont = label.getFont();
-//                int newSize = currentFont.getSize() + amount;
-//                label.setFont(currentFont.deriveFont((float) newSize));
-//            } else if (comp instanceof JButton) {
-//                JButton btn = (JButton) comp;
-//                Font currentFont = btn.getFont(); 
-//                int newSize = currentFont.getSize() + amount; 
-//                btn.setFont(currentFont.deriveFont((float) newSize));
-//            } else if (comp instanceof Container) {
-//                changeFontSize((Container) comp, amount); // Recursively search in nested containers
-//            }
-//        }
-//    }
+    // Should refactor this
+    // Takes a component and amount.
+    // Goes through every subcomponent and increases the font size of JLabels or JButtons
+    private static void changeFontSize(Container container, int amount) {
+        for (Component comp : container.getComponents()) {
+            if (comp instanceof JLabel) {
+                JLabel label = (JLabel) comp;
+                Font currentFont = label.getFont();
+                int newSize = currentFont.getSize() + amount;
+                label.setFont(currentFont.deriveFont((float) newSize));
+            } else if (comp instanceof JButton) {
+                JButton btn = (JButton) comp;
+                Font currentFont = btn.getFont(); 
+                int newSize = currentFont.getSize() + amount; 
+                btn.setFont(currentFont.deriveFont((float) newSize));
+            } else if (comp instanceof JTextArea) {
+            	JTextArea label = (JTextArea) comp;
+                Font currentFont = label.getFont();
+                int newSize = currentFont.getSize() + amount;
+                label.setFont(currentFont.deriveFont((float) newSize));
+            } else if (comp instanceof JTextPane) {
+            	JTextPane label = (JTextPane) comp;
+                Font currentFont = label.getFont();
+                int newSize = currentFont.getSize() + amount;
+                label.setFont(currentFont.deriveFont((float) newSize));
+            } else if (comp instanceof Container) {
+                changeFontSize((Container) comp, amount); // Recursively search in nested containers
+            }
+        }
+    }
     
     public static void clearPosts() {
     	contentFeed.removeAll();

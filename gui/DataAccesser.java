@@ -144,6 +144,46 @@ public class DataAccesser {
 		}
 	}
 	
+	public static void uploadFollow(int followedId) {
+		try {
+			int followerId = Main.getCurrentAccountId();
+			Connection connection = connectToDatabase();
+			//Insert a new record if one doesn't exist
+			String query = "INSERT INTO Follow (followerId, followedId)\n" +
+					"SELECT ?, ?\n" +
+					"WHERE NOT EXISTS (\n" +
+					"    SELECT 1 FROM Follow WHERE followerId = ? AND followedId = ?\n" +
+					");";
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, followerId);
+			statement.setInt(2, followedId);
+			statement.setInt(3, followerId);
+			statement.setInt(4, followedId);
+			statement.executeUpdate();
+			statement.close();
+			connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void removeFollow(int followedId) {
+		try {
+			int followerId = Main.getCurrentAccountId();
+		    Connection connection = connectToDatabase();
+		    String query = "DELETE FROM Follow WHERE followerId = ? AND followedId = ?";
+
+		    PreparedStatement statement = connection.prepareStatement(query);
+		    statement.setInt(1, followerId);
+		    statement.setInt(2, followedId); // Set postId
+		    statement.executeUpdate();
+		    statement.close();
+		    connection.close();
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		}
+	}
+	
 	public static List<Account> fetchFollowing(int accountId) {
 		List<Account> followedUsers = new ArrayList<>();
 		try {
@@ -156,9 +196,12 @@ public class DataAccesser {
 				int followedId = resultSet.getInt("followedId");
 				followedUsers.add(DataAccesser.fetchAccount(followedId));
 			}
+			resultSet.close();
+			statement.close();
+			connection.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
+		} 
 		return followedUsers;
 	}
 	

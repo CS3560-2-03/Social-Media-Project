@@ -7,20 +7,33 @@ import core.Account;
 import java.util.*;
 import java.util.List;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-public class Sidebar extends JPanel {
-    private JButton loginBtn;
-    private JButton postBtn;
-    private JPanel followedUsersPanel;
+public class Sidebar {
+	private static CardLayout cl = CardManager.cardLayout;
+	private static JPanel cards = CardManager.cards;
+    private static JButton loginBtn;
+    private static JButton postBtn;
+    private static JPanel followedUsersPanel;
     
-    public Sidebar(){
-    	CardLayout cl = CardManager.cardLayout;
-    	JPanel cards = CardManager.cards;
-    	
-        setLayout(new GridBagLayout());
+    private static JPanel sidebar;
+    
+    public static JPanel getSidebar() {
+    	if (sidebar == null) {
+    		makeSidebar();
+    	}
+    	return sidebar;
+    }
+    
+    private static void makeSidebar(){
+    	sidebar = new JPanel();
+
+        sidebar.setLayout(new GridBagLayout());
         
         //  HOME BUTTON
         JButton homeBtn = new JButton("Home");
@@ -109,33 +122,34 @@ public class Sidebar extends JPanel {
         //gbc.insets = new Insets(0, 0, 0, 0);
         gbc.fill=GridBagConstraints.HORIZONTAL;
         
-        add(homeBtn, gbc);
-        add(postBtn, gbc);
-        add(Box.createRigidArea(new Dimension(0, 10)), gbc);
-        add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
-        add(sortLbl, gbc);
-        add(recent, gbc);
-        add(popular, gbc);
-        add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
-        add(filterLbl, gbc);
-        add(timePanel, gbc);
-        add(followedBtn, gbc);
-        add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
-        add(followingLbl, gbc);
+        sidebar.add(homeBtn, gbc);
+        sidebar.add(postBtn, gbc);
+        sidebar.add(Box.createRigidArea(new Dimension(0, 10)), gbc);
+        sidebar.add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
+        sidebar.add(sortLbl, gbc);
+        sidebar.add(recent, gbc);
+        sidebar.add(popular, gbc);
+        sidebar.add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
+        sidebar.add(filterLbl, gbc);
+        sidebar.add(timePanel, gbc);
+        sidebar.add(followedBtn, gbc);
+        sidebar.add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
+        sidebar.add(followingLbl, gbc);
         
         followedUsersPanel = new JPanel(new GridBagLayout());
-        add(followedUsersPanel, gbc);
+        sidebar.add(followedUsersPanel, gbc);
         
         
         // This is for spacing
         gbc.weighty = 1.0; 
-        add(new JPanel(), gbc);
+        sidebar.add(new JPanel(), gbc);
         gbc.weighty=0;
         
-        add(loginBtn, gbc);
+        sidebar.add(loginBtn, gbc);
     }
     
-    public void displayFollowedUsers(List<Account> followedUsersList) {
+    public static void displayFollowedUsers() {
+    	List<Account> followedUsersList = DataAccesser.fetchFollowing(Main.getCurrentAccountId());
     	followedUsersPanel.removeAll();
     	
         GridBagConstraints gbc = new GridBagConstraints();
@@ -143,29 +157,65 @@ public class Sidebar extends JPanel {
         gbc.fill=GridBagConstraints.HORIZONTAL;
         gbc.weightx=1.0;
     	
+        followedUsersPanel.add(new JSeparator(), gbc);
     	for (Account account : followedUsersList) {
     		followedUsersPanel.add(createFollowedUserBtn(account), gbc);
     		followedUsersPanel.add(new JSeparator(), gbc);
     	}
+    	followedUsersPanel.revalidate();
     }
     
-    public JPanel createFollowedUserBtn(Account account) {
+    private static JPanel createFollowedUserBtn(Account account) {
     	JPanel wrapper = new JPanel(new BorderLayout());
     	JLabel nameLbl = new JLabel(account.getDisplayName());
     	nameLbl.setOpaque(true);
     	nameLbl.setBackground(Color.WHITE);
     	nameLbl.setFont(Constants.M_FONT);
-    	wrapper.add(nameLbl);
+    	wrapper.add(nameLbl, BorderLayout.CENTER);
+    	JLabel xBtn = new JLabel(" X ");
+    	xBtn.setOpaque(true);
+    	xBtn.setFont(Constants.M_FONT);
+    	wrapper.add(xBtn, BorderLayout.EAST);
+    	
+    	nameLbl.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    	nameLbl.addMouseListener(new MouseAdapter() {
+    		@Override
+			public void mouseEntered(MouseEvent e) {
+    			nameLbl.setBackground(Color.decode("#DDDDDD"));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				nameLbl.setBackground(Color.WHITE);
+			}
+			@Override
+            public void mouseClicked(MouseEvent e) {
+                System.out.println("FOLLOWED USER CLICKED");
+            }
+        });
+    	xBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    	xBtn.addMouseListener(new MouseAdapter() {
+    		@Override
+			public void mouseEntered(MouseEvent e) {
+    			xBtn.setBackground(Color.decode("#CCCCCC"));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				xBtn.setBackground(Color.decode("#EEEEEE"));
+			}
+			@Override
+            public void mouseClicked(MouseEvent e) {
+                DataAccesser.removeFollow(account.getId());
+                Sidebar.displayFollowedUsers();
+            }
+        });
     	return wrapper;
     }
     
-    public void enablePostBtn(boolean status) {
+    public static void enablePostBtn(boolean status) {
     	postBtn.setEnabled(status);
     }
 
-    public void showUserProfileBtn(){
-    	CardLayout cl = CardManager.cardLayout;
-    	JPanel cards = CardManager.cards;
+    public static void showUserProfileBtn(){
         loginBtn.setText("Profile");
         loginBtn.removeActionListener(loginBtn.getActionListeners()[0]);
         cl.show(cards, "home");

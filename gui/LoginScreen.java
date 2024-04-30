@@ -8,13 +8,10 @@ import java.sql.*;
 
 
 public class LoginScreen extends JPanel {
-    private Sidebar sidebar;
-    public LoginScreen(Sidebar sidebar){
+    public LoginScreen(){
         setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
-
-        this.sidebar = sidebar;
         
         JLabel titleLbl = new JLabel("Login");
         titleLbl.setFont(new Font("Arial", Font.BOLD, 32));
@@ -86,8 +83,8 @@ public class LoginScreen extends JPanel {
                 UserProfileScreen.setInfo(userID);
                 Main.setCurrentAccountId(userID);
                 JOptionPane.showMessageDialog(null, "Successfully logged in!");
-                sidebar.showUserProfileBtn();
-                sidebar.displayFollowedUsers(DataAccesser.fetchFollowing(userID));
+                Sidebar.showUserProfileBtn();
+                Sidebar.displayFollowedUsers();
                 c.close();
             }
             //If information cannot be found in database

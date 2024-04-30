@@ -33,11 +33,35 @@ public class ExpandedPost extends ScrollablePanel {
         // Title, Author, Content
 
         JTextPane title = makeTextPane(post.getTitle(), Constants.L_FONT);
-        JTextPane author = makeTextPane(post.getAuthor().getDisplayName(), Constants.S_FONT);
+        JPanel authorPanel = new JPanel(new BorderLayout());
+        JTextArea author = new JTextArea(post.getAuthor().getDisplayName());
+        author.setFont(Constants.S_FONT);
+        author.setEditable(false);
+        author.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				author.setForeground(Color.BLUE);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				author.setForeground(Color.BLACK);
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				DataAccesser.uploadFollow(post.getAuthor().getId());
+				Sidebar.displayFollowedUsers();
+			}
+		});
+        author.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        authorPanel.add(author, BorderLayout.WEST);
+        JPanel spacingPanel = new JPanel();
+        spacingPanel.setOpaque(true);
+        spacingPanel.setBackground(Color.WHITE);
+        authorPanel.add(spacingPanel, BorderLayout.CENTER);
         JTextPane content = makeTextPane(post.getTextContent(), Constants.M_FONT);
 
         add(title, gbc);
-        add(author, gbc);
+        add(authorPanel, gbc);
         add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
         add(content, gbc);
         add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
