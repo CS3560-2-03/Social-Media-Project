@@ -220,6 +220,38 @@ public class DataAccesser {
 	    }
 		return result;
 	}
+	
+	public static void removePostVote(int accountId, int postId) {
+		try {
+		    Connection connection = connectToDatabase();
+		    String query = "DELETE FROM PostVote WHERE accountId = ? AND postId = ?;";
+
+		    PreparedStatement statement = connection.prepareStatement(query);
+		    statement.setInt(1, accountId); // Set accountId
+		    statement.setInt(2, postId); // Set postId
+		    statement.executeUpdate();
+		    statement.close();
+		    connection.close();
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		}
+	}
+	
+	public static void removeCommentVote(int accountId, int commentId) {
+		try {
+		    Connection connection = connectToDatabase();
+		    String query = "DELETE FROM CommentVote WHERE accountId = ? AND commentId = ?;";
+
+		    PreparedStatement statement = connection.prepareStatement(query);
+		    statement.setInt(1, accountId); // Set accountId
+		    statement.setInt(2, commentId); // Set postId
+		    statement.executeUpdate();
+		    statement.close();
+		    connection.close();
+		} catch (SQLException e) {
+		    e.printStackTrace();
+		}
+	}
 
 
 	public static void uploadPostVote(int accountId, int postId, int newValue) {

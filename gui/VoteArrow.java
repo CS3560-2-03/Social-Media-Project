@@ -65,12 +65,18 @@ public class VoteArrow extends JLabel {
 
 					//One of these should not be null
 					if(postRef != null) {
-						DataAccesser.uploadPostVote(accountId, postRef.getPostId(), direction);
-
+						if (selected) {
+							DataAccesser.removePostVote(accountId, postRef.getPostId());;
+						} else {
+							DataAccesser.uploadPostVote(accountId, postRef.getPostId(), direction);
+						}
 						voteText.setText(String.valueOf(postRef.refetchVotes()));
 					} else if(commentRef != null) {
-						DataAccesser.uploadCommentVote(accountId, commentRef.getCommentId(), direction);
-
+						if (selected) {
+							DataAccesser.removeCommentVote(accountId, commentRef.getCommentId());
+						} else {
+							DataAccesser.uploadCommentVote(accountId, commentRef.getCommentId(), direction);
+						}
 						voteText.setText(String.valueOf(commentRef.refetchVotes()));
 					} else {
 						System.out.println("VoteArrow had no reference to the comment/post it was attached to");
