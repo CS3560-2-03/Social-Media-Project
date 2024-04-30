@@ -31,9 +31,8 @@ public class AccountManager {
                 try {
                     int accountId = result.getInt("accountID");
                     String username = result.getString("username");
-                    String password = result.getString("password");
                     String displayName = result.getString("displayName");
-                    a = new Account(accountId, username, password, displayName);
+                    a = new Account(accountId, username, displayName);
                 } catch(Exception ex) {
                     System.out.println("Failed to parse result: " + ex.getMessage());
                 }

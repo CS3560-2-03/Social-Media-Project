@@ -144,6 +144,24 @@ public class DataAccesser {
 		}
 	}
 	
+	public static List<Account> fetchFollowing(int accountId) {
+		List<Account> followedUsers = new ArrayList<>();
+		try {
+			Connection connection = connectToDatabase();
+			String query = "SELECT * FROM Follow WHERE followerId = ? ORDER BY followedId DESC";
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, accountId);
+			ResultSet resultSet = statement.executeQuery();
+			while (resultSet.next()) {
+				int followedId = resultSet.getInt("followedId");
+				followedUsers.add(DataAccesser.fetchAccount(followedId));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return followedUsers;
+	}
+	
 	// Returns an array of comments based on a postId
 	// Sorts them based on votes
 	public static List<Comment> fetchComments(int postId) {
@@ -202,9 +220,8 @@ public class DataAccesser {
 
 	        while (resultSet.next()) {
 	            String username = resultSet.getString("username");
-	            String password = resultSet.getString("password");
 	            String displayName = resultSet.getString("displayName");
-	            result = new Account(accountId, username, password, displayName);
+	            result = new Account(accountId, username, displayName);
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();

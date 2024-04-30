@@ -2,7 +2,10 @@ package gui;
 
 import core.Constants;
 import core.PostManager;
+import core.Account;
 
+import java.util.*;
+import java.util.List;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -11,6 +14,7 @@ import javax.swing.event.DocumentListener;
 public class Sidebar extends JPanel {
     private JButton loginBtn;
     private JButton postBtn;
+    private JPanel followedUsersPanel;
     
     public Sidebar(){
     	CardLayout cl = CardManager.cardLayout;
@@ -82,8 +86,6 @@ public class Sidebar extends JPanel {
         JCheckBox followedBtn = new JCheckBox("Followed");
         followedBtn.setFont(Constants.M_FONT);
         
-        
-        
         //  FOLLOWING
         JLabel followingLbl = new JLabel("Following", SwingConstants.CENTER);
         followingLbl.setFont(Constants.L_FONT);
@@ -121,11 +123,9 @@ public class Sidebar extends JPanel {
         add(new JSeparator(SwingConstants.HORIZONTAL), gbc);
         add(followingLbl, gbc);
         
-        JLabel tempFollowing = new JLabel("Yuu Kamiya");
-        tempFollowing.setOpaque(true);
-        tempFollowing.setBackground(Color.WHITE);
-        tempFollowing.setFont(Constants.M_FONT);
-        add(tempFollowing, gbc);
+        followedUsersPanel = new JPanel(new GridBagLayout());
+        add(followedUsersPanel, gbc);
+        
         
         // This is for spacing
         gbc.weighty = 1.0; 
@@ -133,6 +133,30 @@ public class Sidebar extends JPanel {
         gbc.weighty=0;
         
         add(loginBtn, gbc);
+    }
+    
+    public void displayFollowedUsers(List<Account> followedUsersList) {
+    	followedUsersPanel.removeAll();
+    	
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx=0; gbc.gridy=GridBagConstraints.RELATIVE;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        gbc.weightx=1.0;
+    	
+    	for (Account account : followedUsersList) {
+    		followedUsersPanel.add(createFollowedUserBtn(account), gbc);
+    		followedUsersPanel.add(new JSeparator(), gbc);
+    	}
+    }
+    
+    public JPanel createFollowedUserBtn(Account account) {
+    	JPanel wrapper = new JPanel(new BorderLayout());
+    	JLabel nameLbl = new JLabel(account.getDisplayName());
+    	nameLbl.setOpaque(true);
+    	nameLbl.setBackground(Color.WHITE);
+    	nameLbl.setFont(Constants.M_FONT);
+    	wrapper.add(nameLbl);
+    	return wrapper;
     }
     
     public void enablePostBtn(boolean status) {

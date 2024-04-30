@@ -6,25 +6,13 @@ import java.util.*;
 public class Account {
 	private int accountId;
 	private String username;
-	private String password;
 	private String displayName;
-	private List<Post> postHistory;
 
-
-	public Account(int accountId, String username, String password, String displayName) {
+	public Account(int accountId, String username, String displayName) {
 		this.accountId = accountId;
 		this.username = username;
-		this.password = password;
 		this.displayName = displayName;
 	}
-
-	// Sets username and password
-	public Account(String username, String password){
-		this.username = username;
-		this.password = password;
-	}
-
-
 
 	//Connects to databases needed for program to function
 	//If unable to connect to database, return null and print error message in console

@@ -87,6 +87,7 @@ public class LoginScreen extends JPanel {
                 Main.setCurrentAccountId(userID);
                 JOptionPane.showMessageDialog(null, "Successfully logged in!");
                 sidebar.showUserProfileBtn();
+                sidebar.displayFollowedUsers(DataAccesser.fetchFollowing(userID));
                 c.close();
             }
             //If information cannot be found in database
