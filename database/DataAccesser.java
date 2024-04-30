@@ -1,4 +1,6 @@
-package gui;
+package database;
+
+import gui.Main;
 import core.Account;
 import core.Comment;
 import core.PostManager;

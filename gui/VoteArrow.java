@@ -3,6 +3,7 @@ package gui;
 import core.Comment;
 import core.Post;
 import core.Constants;
+import database.DataAccesser;
 
 import javax.swing.*;
 import java.awt.event.*;

@@ -2,7 +2,7 @@ package core;
 
 import java.time.Instant;
 
-import gui.DataAccesser;
+import database.DataAccesser;
 
 public class Comment {
 	private int commentId;

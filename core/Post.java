@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.time.Instant;
 import java.util.*;
 
-import gui.DataAccesser;
+import database.DataAccesser;
 
 public class Post {
 	private int postId;

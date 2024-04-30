@@ -3,6 +3,7 @@ package gui;
 import core.Constants;
 import core.PostManager;
 import core.Account;
+import database.DataAccesser;
 
 import java.util.*;
 import java.util.List;

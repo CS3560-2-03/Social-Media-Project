@@ -2,6 +2,7 @@ package gui;
 
 import core.Constants;
 import core.Post;
+import database.DataAccesser;
 
 import java.awt.*;
 import java.awt.event.*;

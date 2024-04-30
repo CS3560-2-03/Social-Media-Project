@@ -3,6 +3,7 @@ package gui;
 import core.Comment;
 import core.Constants;
 import core.Post;
+import database.DataAccesser;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;

@@ -1,7 +1,6 @@
 package core;
 
-import database.SQLiteHandler;
-import gui.DataAccesser;
+import database.DataAccesser;
 import gui.Main;
 
 import java.sql.ResultSet;
@@ -15,8 +14,6 @@ public class PostManager {
 	private static boolean filterByTime = true;
 	private static int timeFilterDays = 7;
 	private static List<Account> userFilter = new ArrayList<Account>();
-
-	private static SQLiteHandler sqLiteHandler = new SQLiteHandler();
 	
 	//lastDisplayedID: postID of last displayed post. Used to track which posts have been displayed
 	//postList should never be sorted, just appended or remade
