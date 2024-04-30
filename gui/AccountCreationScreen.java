@@ -12,10 +12,7 @@ import java.sql.*;
 
 public class AccountCreationScreen extends JPanel {
     
-    public AccountCreationScreen(){
-    	CardLayout cl = CardManager.cardLayout;
-    	JPanel cards = CardManager.cards;
-    	
+    public AccountCreationScreen(){    	
         // This makes tooltips appear faster
         ToolTipManager.sharedInstance().setInitialDelay(100);
 

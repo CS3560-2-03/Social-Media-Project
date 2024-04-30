@@ -15,8 +15,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 public class Sidebar {
-	private static CardLayout cl = CardManager.cardLayout;
-	private static JPanel cards = CardManager.cards;
     private static JButton loginBtn;
     private static JButton postBtn;
     private static JPanel followedUsersPanel;
@@ -38,12 +36,12 @@ public class Sidebar {
         //  HOME BUTTON
         JButton homeBtn = new JButton("Home");
         homeBtn.setFont(Constants.XL_FONT);
-        homeBtn.addActionListener(event->cl.show(cards, "home"));
+        homeBtn.addActionListener(event->CardManager.show(CardManager.HOME));
 
         // CREATE POST
         postBtn = new JButton("Post");
         postBtn.setFont(Constants.XL_FONT);
-        postBtn.addActionListener(event->cl.show(cards, "postCreationScreen"));
+        postBtn.addActionListener(event->CardManager.show(CardManager.POST_CREATE));
         postBtn.setEnabled(false);
 
         //  SORTING
@@ -107,7 +105,7 @@ public class Sidebar {
         //  LOGIN BUTTON
         loginBtn = new JButton("Login");
         loginBtn.setFont(Constants.XL_FONT);
-        loginBtn.addActionListener(event->cl.show(cards, "loginScreen"));
+        loginBtn.addActionListener(event->CardManager.show(CardManager.LOGIN));
 
         sortLbl.setAlignmentX(Component.CENTER_ALIGNMENT);
         homeBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -218,8 +216,8 @@ public class Sidebar {
     public static void showUserProfileBtn(){
         loginBtn.setText("Profile");
         loginBtn.removeActionListener(loginBtn.getActionListeners()[0]);
-        cl.show(cards, "home");
-        loginBtn.addActionListener(event -> cl.show(cards, "userProfile"));
+        CardManager.show(CardManager.PROFILE);
+        loginBtn.addActionListener(event -> CardManager.show(CardManager.PROFILE));
 
     }
 }

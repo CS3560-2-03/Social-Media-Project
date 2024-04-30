@@ -11,10 +11,7 @@ import java.time.Instant;
 import javax.swing.*;
 
 public class PostCreationScreen extends ScrollablePanel {
-    public PostCreationScreen(){
-    	CardLayout cl = CardManager.cardLayout;
-    	JPanel cards = CardManager.cards;
-    	
+    public PostCreationScreen(){    	
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx=0; gbc.gridy=GridBagConstraints.RELATIVE;

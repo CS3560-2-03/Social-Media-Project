@@ -33,19 +33,6 @@ public class Account {
 			return null;
 		}
 	}
-	
-	/* Allows user to create a post. 
-		Once created, it is added to postHistory.
-		It is also added to the core.PostManager object
-	*/
-	public void createPost(){
-		
-	}
-
-	// Removes a specific post from postHistory
-	public void removePost(Post post){
-
-	}
 
 	public void setDisplayName(String displayName){
 		displayName = displayName;

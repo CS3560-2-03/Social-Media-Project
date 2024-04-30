@@ -14,8 +14,6 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 public class FeedPost extends JPanel {
-	private CardLayout cl = CardManager.cardLayout;
-	private JPanel cards = CardManager.cards;
     private Post post;
     private int maxContentLength = 500;
 	
@@ -136,9 +134,8 @@ public class FeedPost extends JPanel {
     // Fix later
     private void expandPost(){
         JScrollPane expandedPost = new JScrollPane(new ExpandedPost(post));
-//        expandedPost.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
         
-        cards.add(expandedPost, "expandedPost");
-        cl.show(cards, "expandedPost");
+        CardManager.add(expandedPost, "expandedPost");
+        CardManager.show("expandedPost");
     }
 }

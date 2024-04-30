@@ -18,8 +18,6 @@ import javax.swing.border.*;
 public class Main {
 	private static JFrame frame;
     private static ScrollablePanel contentFeed;
-    private static JPanel cards;
-    private static CardLayout cl;
     private static int zoomLvl;
     private static JScrollPane sp;
     private static JPanel sidebar;
@@ -46,8 +44,6 @@ public class Main {
     
     private static void launch(){
         zoomLvl = 4;
-        cl = CardManager.cardLayout;
-        cards = CardManager.cards;
 
         frame = new JFrame("OOPlatform");
         frame.setLayout(new BorderLayout());
@@ -65,12 +61,12 @@ public class Main {
         frame.setVisible(true);
 
         JPanel loginCard = new LoginScreen();
-        cards.add(loginCard, "loginScreen");
+        CardManager.add(loginCard, CardManager.LOGIN);
         JPanel accountCreation = new AccountCreationScreen();
-        cards.add(accountCreation, "accountCreationScreen");
+        CardManager.add(accountCreation, CardManager.ACCOUNT_CREATE);
         JScrollPane postCreation = new JScrollPane(new PostCreationScreen());
         postCreation.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
-        cards.add(postCreation, "postCreationScreen");
+        CardManager.add(postCreation, CardManager.POST_CREATE);
 
         // Global key listener using KeyboardFocusManager
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
@@ -80,15 +76,15 @@ public class Main {
             	if (event instanceof KeyEvent) {
                     KeyEvent keyEvent = (KeyEvent) event;
                     if (keyEvent.getID() == KeyEvent.KEY_PRESSED) {
-                        if (keyEvent.getKeyCode() == KeyEvent.VK_EQUALS && keyEvent.isControlDown() && zoomLvl < Constants.MAX_ZOOM) {
+                        if (keyEvent.getKeyCode() == KeyEvent.VK_EQUALS && keyEvent.isControlDown()) {
                             zoomLvl++;
                             contentFeed.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
-                            changeFontSize(contentFeed, 2);
+                            changeFontSize((Container)CardManager.getTopCard(), 2);
                             changeFontSize(sidebar, 2);
-                        } else if (keyEvent.getKeyCode() == KeyEvent.VK_MINUS && keyEvent.isControlDown() && zoomLvl > Constants.MIN_ZOOM) {
+                        } else if (keyEvent.getKeyCode() == KeyEvent.VK_MINUS && keyEvent.isControlDown()) {
                             zoomLvl--;
                             contentFeed.setBorder(new EmptyBorder(10, zoomLvl*30, 10, zoomLvl*30));
-                            changeFontSize(contentFeed, -2);
+                            changeFontSize((Container)CardManager.getTopCard(), -2);
                             changeFontSize(sidebar, -2);
                         }
                     }
@@ -97,12 +93,44 @@ public class Main {
             }
         });
         
-        cards.add(sp, "home");
-        cl.show(cards, "home");
-        frame.add(cards, BorderLayout.CENTER);
+        CardManager.add(sp, CardManager.HOME);
+        CardManager.show(CardManager.HOME);
+        frame.add(CardManager.cardDisplay, BorderLayout.CENTER);
 
         JPanel userProfile = new UserProfileScreen();
-        cards.add(userProfile, "userProfile");
+        CardManager.add(userProfile, CardManager.PROFILE);
+    }
+    
+
+    // Should definitely refactor this
+    // Takes a component and amount.
+    // Goes through every subcomponent and increases the font size of JLabels or JButtons
+    private static void changeFontSize(Container container, int amount) {
+        for (Component comp : container.getComponents()) {
+            if (comp instanceof JLabel) {
+                JLabel label = (JLabel) comp;
+                Font currentFont = label.getFont();
+                int newSize = currentFont.getSize() + amount;
+                label.setFont(currentFont.deriveFont((float) newSize));
+            } else if (comp instanceof JButton) {
+                JButton btn = (JButton) comp;
+                Font currentFont = btn.getFont(); 
+                int newSize = currentFont.getSize() + amount; 
+                btn.setFont(currentFont.deriveFont((float) newSize));
+            } else if (comp instanceof JTextArea) {
+            	JTextArea label = (JTextArea) comp;
+                Font currentFont = label.getFont();
+                int newSize = currentFont.getSize() + amount;
+                label.setFont(currentFont.deriveFont((float) newSize));
+            } else if (comp instanceof JTextPane) {
+            	JTextPane label = (JTextPane) comp;
+                Font currentFont = label.getFont();
+                int newSize = currentFont.getSize() + amount;
+                label.setFont(currentFont.deriveFont((float) newSize));
+            } else if (comp instanceof Container) {
+                changeFontSize((Container) comp, amount); // Recursively search in nested containers
+            }
+        }
     }
 
     // Creates content feed area
@@ -133,37 +161,6 @@ public class Main {
                 }
             }
         });
-    }
-
-    // Should refactor this
-    // Takes a component and amount.
-    // Goes through every subcomponent and increases the font size of JLabels or JButtons
-    private static void changeFontSize(Container container, int amount) {
-        for (Component comp : container.getComponents()) {
-            if (comp instanceof JLabel) {
-                JLabel label = (JLabel) comp;
-                Font currentFont = label.getFont();
-                int newSize = currentFont.getSize() + amount;
-                label.setFont(currentFont.deriveFont((float) newSize));
-            } else if (comp instanceof JButton) {
-                JButton btn = (JButton) comp;
-                Font currentFont = btn.getFont(); 
-                int newSize = currentFont.getSize() + amount; 
-                btn.setFont(currentFont.deriveFont((float) newSize));
-            } else if (comp instanceof JTextArea) {
-            	JTextArea label = (JTextArea) comp;
-                Font currentFont = label.getFont();
-                int newSize = currentFont.getSize() + amount;
-                label.setFont(currentFont.deriveFont((float) newSize));
-            } else if (comp instanceof JTextPane) {
-            	JTextPane label = (JTextPane) comp;
-                Font currentFont = label.getFont();
-                int newSize = currentFont.getSize() + amount;
-                label.setFont(currentFont.deriveFont((float) newSize));
-            } else if (comp instanceof Container) {
-                changeFontSize((Container) comp, amount); // Recursively search in nested containers
-            }
-        }
     }
     
     public static void clearPosts() {
