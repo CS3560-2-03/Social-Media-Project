@@ -4,6 +4,7 @@ import core.Constants;
 import core.Post;
 import core.PostManager;
 import core.Account;
+import database.DataAccesser;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -37,6 +39,13 @@ public class Main {
     	isLoggedIn = true;
     	Sidebar.enablePostBtn(true);
     }
+
+    public static void logOut() {
+        isLoggedIn = false;
+        Sidebar.enablePostBtn(false);
+        currentAccountId = -1;
+
+    };
     
     public static int getCurrentAccountId() {
     	return currentAccountId;
@@ -149,6 +158,7 @@ public class Main {
         sp = new JScrollPane(contentFeed);
         sp.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         frame.add(sp, BorderLayout.CENTER);
+        //addSearchBar(contentFeed);
     }
 
     // Handles loading posts when you scroll down far enough
@@ -174,6 +184,7 @@ public class Main {
     public static void clearPosts() {
     	contentFeed.removeAll();
     	contentFeed.revalidate();
+        //addSearchBar(contentFeed);
     }
 
     private static void createPost() {
@@ -184,6 +195,26 @@ public class Main {
         JPanel postPanel = new FeedPost(nextPost);
         contentFeed.add(postPanel);
         contentFeed.revalidate();
+    }
+
+    private static void addSearchBar(ScrollablePanel scrollablePanel) {
+        // Create a JPanel for the search bar
+        JPanel searchBarPanel = new JPanel();
+        JTextField searchField = new JTextField(20);
+        JButton searchButton = new JButton("Search");
+        searchButton.addActionListener(e->searchField.getText());
+        searchBarPanel.add(searchField);
+        searchBarPanel.add(searchButton);
+
+        // Add the search bar panel to the top of the frame
+        scrollablePanel.add(searchBarPanel, BorderLayout.NORTH);
+    }
+
+    private static void search(String search) {
+        System.out.println(search);
+        clearPosts();
+        ArrayList<Post> posts = DataAccesser.searchPosts(search);
+
     }
 
 

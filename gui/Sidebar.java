@@ -230,4 +230,11 @@ public class Sidebar {
             CardManager.show(CardManager.PROFILE);
         });
     }
+
+    public static void showLoginBtn() {
+        loginBtn.setText("Login");
+        loginBtn.removeActionListener(loginBtn.getActionListeners()[0]);
+        loginBtn.addActionListener(event->CardManager.show(CardManager.LOGIN));
+        followedUsersPanel.removeAll();
+    }
 }

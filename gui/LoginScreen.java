@@ -8,6 +8,9 @@ import java.sql.*;
 
 
 public class LoginScreen extends JPanel {
+    JTextField usernameField;
+    JTextField passwordField;
+
     public LoginScreen(){
         setLayout(new GridBagLayout());
 
@@ -25,14 +28,14 @@ public class LoginScreen extends JPanel {
         usernameLbl.setFont(new Font("Arial", Font.PLAIN, 20));
         add(usernameLbl, gbc);
 
-        JTextField usernameField = new JTextField(16);
+        usernameField = new JTextField(16);
         add(usernameField, gbc);
 
         JLabel passwordLbl = new JLabel("Password:");
         passwordLbl.setFont(new Font("Arial", Font.PLAIN, 20));
         add(passwordLbl, gbc);
 
-        JTextField passwordField = new JTextField(16);
+        passwordField = new JTextField(16);
         add(passwordField, gbc);
 
         JButton loginBtn = new JButton("Log In");
@@ -79,6 +82,8 @@ public class LoginScreen extends JPanel {
                 JOptionPane.showMessageDialog(null, "Successfully logged in!");
                 Sidebar.showUserProfileBtn();
                 Sidebar.displayFollowedUsers();
+                usernameField.setText("");
+                passwordField.setText("");
                 c.close();
             }
             //If information cannot be found in database

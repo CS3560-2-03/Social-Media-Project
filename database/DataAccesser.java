@@ -1,6 +1,7 @@
 package database;
 
 import gui.AccountCreationScreen;
+import core.Post;
 import gui.Main;
 import core.Account;
 import core.Comment;
@@ -534,6 +535,25 @@ public class DataAccesser {
 	        }
 		}
 		return 0;
+	}
+
+	public static ArrayList<Post> searchPosts(String search) {
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		try {
+			connection = connectToDatabase();
+			String query = "SELECT value FROM CommentVote WHERE accountId = ? AND commentId = ?;";
+			statement = connection.prepareStatement(query);
+			//statement.setInt(1, accountId);
+			//statement.setInt(2, commentId);
+
+			resultSet = statement.executeQuery();
+		} catch(Exception ex) {
+			System.out.println("Error on searchPosts: " + ex.getMessage() + "\n" + ex.getStackTrace());
+		}
+
+		return new ArrayList<Post>();
 	}
 
 	//Connects to databases needed for program to function

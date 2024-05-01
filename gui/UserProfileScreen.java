@@ -42,6 +42,15 @@ public class UserProfileScreen extends JPanel {
         topPanel.add(editProfileBtn, gbcTop);
         editProfileBtn.addActionListener(e -> showEditProfileDialog());
 
+        JButton logOutBtn = new JButton("Log Out");
+        logOutBtn.setFont(new Font("Arial", Font.BOLD, 18));
+        logOutBtn.setPreferredSize(new Dimension(150, 40));
+        gbcTop.gridx = 2;
+        gbcTop.anchor = GridBagConstraints.NORTH;
+        topPanel.add(logOutBtn, gbcTop);
+        logOutBtn.addActionListener(e -> logOut());
+
+
         add(topPanel, BorderLayout.NORTH);
 
         // Bottom section for displaying posts
@@ -50,6 +59,7 @@ public class UserProfileScreen extends JPanel {
         scrollPane = new JScrollPane(bottomPanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(10);
         add(scrollPane, BorderLayout.CENTER);
 
     }
@@ -173,13 +183,13 @@ public class UserProfileScreen extends JPanel {
         // Display user posts in the panel
         for (Post post : userPosts) {
             FeedPost feedPost = new FeedPost(post);
+            feedPost.setPreferredSize(new Dimension(bottomPanel.getWidth(), feedPost.getPreferredSize().height));
             bottomPanel.add(feedPost);
         }
         
         // Refresh the panel to display the posts
         bottomPanel.revalidate();
         bottomPanel.repaint();
-
         // Scroll to the top of the scroll pane after a delay
         Timer timer = new Timer(50, e -> {
             JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
@@ -188,5 +198,13 @@ public class UserProfileScreen extends JPanel {
         timer.setRepeats(false); // Set to run only once
         timer.start();
     }
+
+    void logOut() {
+        Main.logOut();
+        CardManager.show(CardManager.HOME);
+        Sidebar.showLoginBtn();
+    }
+
+
 
 }
