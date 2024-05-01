@@ -3,51 +3,55 @@ package gui;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
+
+import core.Post;
+
 import java.sql.*;
+import java.util.ArrayList;
 
 public class UserProfileScreen extends JPanel {
     private static JLabel displayNameLabel;
-    private JTextField usernameField;
-    private JTextField passwordField;
     private static int accountID;
+    private static JPanel bottomPanel;
+    private static JScrollPane scrollPane;
+
 
     public UserProfileScreen(){
-    setLayout(new GridBagLayout());
-    GridBagConstraints gbc = new GridBagConstraints();
+        setLayout(new BorderLayout());
 
-    // Display name label
-    displayNameLabel = new JLabel("display name", JLabel.CENTER);
-    displayNameLabel.setFont(new Font("Arial", Font.BOLD, 36));
-    displayNameLabel.setPreferredSize(new Dimension(300, 50)); 
-    gbc.gridx = 0;
-    gbc.gridy = 0;
-    gbc.gridwidth = 1;
-    gbc.anchor = GridBagConstraints.NORTHWEST; 
-    gbc.weightx = 1; 
-    gbc.weighty = 0; 
-    add(displayNameLabel, gbc);
+        // Top section for display name and edit button
+        JPanel topPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbcTop = new GridBagConstraints();
+        displayNameLabel = new JLabel("display name", JLabel.CENTER);
+        displayNameLabel.setFont(new Font("Arial", Font.BOLD, 36));
+        displayNameLabel.setPreferredSize(new Dimension(300, 50));
+        gbcTop.gridx = 0;
+        gbcTop.gridy = 0;
+        gbcTop.anchor = GridBagConstraints.NORTHWEST;
+        gbcTop.weightx = 1;
+        gbcTop.weighty = 0;
+        topPanel.add(displayNameLabel, gbcTop);
 
-    usernameField = new JTextField(16);
-    passwordField = new JTextField(16);
+        JButton editProfileBtn = new JButton("Edit Account");
+        editProfileBtn.setFont(new Font("Arial", Font.BOLD, 18));
+        editProfileBtn.setPreferredSize(new Dimension(150, 40));
+        gbcTop.gridx = 1;  // Set the gridx to 1 to move the button to the right
+        gbcTop.anchor = GridBagConstraints.NORTHEAST;
+        gbcTop.weightx = 0;  // Set weightx to 0 to prevent the button from stretching
+        topPanel.add(editProfileBtn, gbcTop);
+        editProfileBtn.addActionListener(e -> showEditProfileDialog());
 
-    // Edit profile button
-    JButton editProfileBtn = new JButton("Edit Account");
-    editProfileBtn.setFont(new Font("Arial", Font.BOLD, 18)); 
-    editProfileBtn.setPreferredSize(new Dimension(150, 40)); 
-    gbc.gridx = 1;
-    gbc.gridx = 1;
-    gbc.gridy = 0;
-    gbc.anchor = GridBagConstraints.NORTHEAST; 
-    gbc.weightx = 0;
-    gbc.weighty = 0; 
-    add(editProfileBtn, gbc);
-    editProfileBtn.addActionListener(e -> showEditProfileDialog());
+        add(topPanel, BorderLayout.NORTH);
 
-    // Add some vertical space between components
-    gbc.gridy = 1;
-    gbc.weighty = 1; 
-    add(Box.createVerticalStrut(10), gbc); 
-}
+        // Bottom section for displaying posts
+        bottomPanel = new JPanel();
+        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
+        scrollPane = new JScrollPane(bottomPanel);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        add(scrollPane, BorderLayout.CENTER);
+
+    }
 
     public static void setInfo(int userID){
         accountID = userID;
@@ -73,11 +77,13 @@ public class UserProfileScreen extends JPanel {
                 
                 c.close();
             }   
+
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error logging into account.");        
            
        }
+       fetchAndDisplayUserPosts();
 
     }
 
@@ -135,8 +141,6 @@ public class UserProfileScreen extends JPanel {
                 updateStmt.executeUpdate();
     
                 // Update the displayed information
-                usernameField.setText(editUsernameField.getText());
-                passwordField.setText(editPasswordField.getText());
                 setInfo(accountID);
 
                 JOptionPane.showMessageDialog(null, "Successfully changed!");
@@ -159,6 +163,56 @@ public class UserProfileScreen extends JPanel {
         editDialog.setSize(300, 200);
         editDialog.setLocationRelativeTo(null);
         editDialog.setVisible(true);
+    }
+
+    public static void fetchAndDisplayUserPosts() {
+        bottomPanel.removeAll();
+
+        ArrayList<Post> userPosts = new ArrayList<>();
+        Connection c = null;
+
+        try {
+            c = AccountCreationScreen.connectToDatabase();
+
+            // SQLite command to retrieve account information based on accountID
+            String query = "SELECT * FROM Post WHERE accountID = ?;";
+            try (PreparedStatement stmt = c.prepareStatement(query)) {
+                stmt.setInt(1, accountID);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        int postId = rs.getInt("postID");
+                        int accountId = rs.getInt("accountID");
+                        String title = rs.getString("title");
+                        String embedLink = rs.getString("embedLink");
+                        String textContent = rs.getString("textContent");
+                        String timeStamp = rs.getString("timeStamp");
+                        Post post = new Post(postId, accountId, title, embedLink, textContent, timeStamp);
+                        userPosts.add(post);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Handle exception
+        }
+
+        // Display user posts in the panel
+        for (Post post : userPosts) {
+            FeedPost feedPost = new FeedPost(post);
+            bottomPanel.add(feedPost);
+        }
+
+        // Refresh the panel to display the posts
+        bottomPanel.revalidate();
+        bottomPanel.repaint();
+
+        // Scroll to the top of the scroll pane after a delay
+        Timer timer = new Timer(50, e -> {
+            JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
+            verticalScrollBar.setValue(0);
+        });
+        timer.setRepeats(false); // Set to run only once
+        timer.start();
     }
 
 }
