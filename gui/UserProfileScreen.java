@@ -5,9 +5,10 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 import core.Post;
+import database.DataAccesser;
 
 import java.sql.*;
-import java.util.ArrayList;
+import java.util.List;
 
 public class UserProfileScreen extends JPanel {
     private static JLabel displayNameLabel;
@@ -83,8 +84,7 @@ public class UserProfileScreen extends JPanel {
             JOptionPane.showMessageDialog(null, "Error logging into account.");        
            
        }
-       fetchAndDisplayUserPosts();
-
+       displayUserPosts();
     }
 
     private void showEditProfileDialog() {
@@ -165,43 +165,17 @@ public class UserProfileScreen extends JPanel {
         editDialog.setVisible(true);
     }
 
-    public static void fetchAndDisplayUserPosts() {
+    public static void displayUserPosts() {
         bottomPanel.removeAll();
 
-        ArrayList<Post> userPosts = new ArrayList<>();
-        Connection c = null;
-
-        try {
-            c = AccountCreationScreen.connectToDatabase();
-
-            // SQLite command to retrieve account information based on accountID
-            String query = "SELECT * FROM Post WHERE accountID = ?;";
-            try (PreparedStatement stmt = c.prepareStatement(query)) {
-                stmt.setInt(1, accountID);
-                try (ResultSet rs = stmt.executeQuery()) {
-                    while (rs.next()) {
-                        int postId = rs.getInt("postID");
-                        int accountId = rs.getInt("accountID");
-                        String title = rs.getString("title");
-                        String embedLink = rs.getString("embedLink");
-                        String textContent = rs.getString("textContent");
-                        String timeStamp = rs.getString("timeStamp");
-                        Post post = new Post(postId, accountId, title, embedLink, textContent, timeStamp);
-                        userPosts.add(post);
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            // Handle exception
-        }
+        List<Post> userPosts = DataAccesser.fetchPostsFrom(accountID);
 
         // Display user posts in the panel
         for (Post post : userPosts) {
             FeedPost feedPost = new FeedPost(post);
             bottomPanel.add(feedPost);
         }
-
+        
         // Refresh the panel to display the posts
         bottomPanel.revalidate();
         bottomPanel.repaint();

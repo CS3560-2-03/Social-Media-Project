@@ -52,12 +52,6 @@ public class LoginScreen extends JPanel {
         add(createAccLbl, gbc);
     }
 
-   /*
-     * BAREBONES LOGIN METHOD
-     * As of 4,17, this method only checks Accounts database if user inputted information can be found 
-     * Does not actually "log in" the user
-     * 4/18, "should" login user
-     */
     private void validateLogin(String username, String password){
         Connection c = null;
         PreparedStatement preparedStmt = null;

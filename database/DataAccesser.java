@@ -1,8 +1,10 @@
 package database;
 
+import gui.AccountCreationScreen;
 import gui.Main;
 import core.Account;
 import core.Comment;
+import core.Post;
 import core.PostManager;
 
 import java.sql.*;
@@ -11,6 +13,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataAccesser {
+	
+	public static List<Post> fetchPostsFrom(int accountId){
+		List<Post> userPosts = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = DataAccesser.connectToDatabase();
+
+	        // SQLite command to retrieve account information based on accountID
+	        String query = "SELECT * FROM Post WHERE accountID = ?;";
+        	PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, accountId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int postId = resultSet.getInt("postID");
+                String title = resultSet.getString("title");
+                String embedLink = resultSet.getString("embedLink");
+                String textContent = resultSet.getString("textContent");
+                String timeStamp = resultSet.getString("timeStamp");
+                Post post = new Post(postId, accountId, title, embedLink, textContent, timeStamp);
+                userPosts.add(post);
+            }
+            resultSet.close();
+            statement.close();
+            connection.close();
+        }	catch (SQLException e) {
+        	e.printStackTrace();
+        }
+        return userPosts;
+	}
+	
 	
 	public static ResultSet fetchPostsByDate(int limit, int offset) {
 		Connection connection = null;
