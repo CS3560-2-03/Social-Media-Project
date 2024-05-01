@@ -68,7 +68,7 @@ public class FeedPost extends JPanel {
         
         JLabel imageLabel = new JLabel();
         boolean showImage = false;
-        if (post.getEmbedLink() != null) {
+        if (post.getEmbedLink() != null && post.getEmbedLink().length() > 0) {
         	try {
             	Image image = ImageIO.read(new URL(post.getEmbedLink()));
             	int width = Main.getContentFeed().getWidth() - Main.getZoomLvl()*30;
