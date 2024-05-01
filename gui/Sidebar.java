@@ -225,7 +225,9 @@ public class Sidebar {
         loginBtn.setText("Profile");
         loginBtn.removeActionListener(loginBtn.getActionListeners()[0]);
         CardManager.show(CardManager.PROFILE);
-        loginBtn.addActionListener(event -> CardManager.show(CardManager.PROFILE));
-
+        loginBtn.addActionListener(event -> {
+            UserProfileScreen.fetchAndDisplayUserPosts();
+            CardManager.show(CardManager.PROFILE);
+        });
     }
 }
