@@ -37,7 +37,7 @@ public class Sidebar {
         //  HOME BUTTON
         JButton homeBtn = new JButton("Home");
         homeBtn.setFont(Constants.XL_FONT);
-        homeBtn.addActionListener(event->CardManager.show(CardManager.HOME));
+        homeBtn.addActionListener(event-> { CardManager.show(CardManager.HOME); PostManager.clearPosts(); });
 
         // CREATE POST
         postBtn = new JButton("Post");

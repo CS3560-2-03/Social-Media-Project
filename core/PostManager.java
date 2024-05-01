@@ -88,7 +88,7 @@ public class PostManager {
 		return timeFilterDays;
 	}
 	
-	private static void clearPosts() {
+	public static void clearPosts() {
 		Main.clearPosts();
 		postList.clear();
 		lastDisplayedID = -1;

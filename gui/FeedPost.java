@@ -6,6 +6,7 @@ import database.DataAccesser;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -13,6 +14,11 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import javax.swing.*;
 import javax.swing.border.*;
+
+import javax.imageio.ImageIO;
+import java.util.ArrayList;
+import java.util.List;
+import java.net.URL;
 
 public class FeedPost extends JPanel {
     private Post post;
@@ -59,6 +65,28 @@ public class FeedPost extends JPanel {
         spacingPanel.setOpaque(true);
         spacingPanel.setBackground(Color.WHITE);
         authorPanel.add(spacingPanel, BorderLayout.CENTER);
+        
+        JLabel imageLabel = new JLabel();
+        boolean showImage = false;
+        if (post.getEmbedLink() != null) {
+        	try {
+            	Image image = ImageIO.read(new URL(post.getEmbedLink()));
+            	int width = Main.getContentFeed().getWidth() - Main.getZoomLvl()*30;
+            	if (image.getWidth(null) > width) {
+            		int newHeight = (int) (image.getHeight(null) * ((double) width / image.getWidth(null)));
+            		image = image.getScaledInstance(width, newHeight, Image.SCALE_SMOOTH);
+            	}
+            	imageLabel = new JLabel(new ImageIcon(image));
+            	showImage = true;
+            } catch (IOException e) {
+            	e.printStackTrace();
+            	imageLabel = new JLabel("Image failed to load.", SwingConstants.CENTER);
+            	imageLabel.setFont(Constants.L_FONT);
+            	imageLabel.setOpaque(true);
+            	imageLabel.setBackground(Color.WHITE);
+            }
+        }
+        
         JTextPane content = makeTextPane(truncateContent(post.getTextContent()), Constants.M_FONT);
 
         title.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -88,7 +116,11 @@ public class FeedPost extends JPanel {
 
         innerPanel.add(title);
         innerPanel.add(authorPanel);
-        innerPanel.add(content);
+        if (showImage) {
+        	innerPanel.add(imageLabel);
+        } else {
+        	innerPanel.add(content);
+        }
         add(utilityBar, BorderLayout.SOUTH);
 	}
 	

@@ -42,6 +42,10 @@ public class Main {
     	return currentAccountId;
     }
     
+    public static int getZoomLvl() {
+    	return zoomLvl;
+    }
+    
     public static boolean isLoggedIn() {
     	return isLoggedIn;
     }

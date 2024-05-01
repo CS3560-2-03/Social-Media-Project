@@ -95,6 +95,7 @@ public class AccountCreationScreen extends JPanel {
             //Execute the actual query
             preparedStmt.executeUpdate();
             JOptionPane.showMessageDialog(null, "Account created!");
+            CardManager.show(CardManager.LOGIN);
 
         //If unable to create an account
         } catch (Exception e) {

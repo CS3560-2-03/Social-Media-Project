@@ -128,7 +128,6 @@ public class DataAccesser {
 	public static int fetchPostVotes(int postId) {
 		Connection connection = null;
 		PreparedStatement statement = null;
-		ResultSet resultSet = null;
 		int sum = 0;
 		
 		try {
@@ -137,16 +136,16 @@ public class DataAccesser {
 			statement = connection.prepareStatement("SELECT COUNT(*) FROM PostVote WHERE postId = ? AND value = ?");
 			statement.setInt(1, postId);
 			statement.setInt(2, 1);
-			resultSet = statement.executeQuery();
-			if (resultSet.next()) {
-				sum += resultSet.getInt(1);
+			ResultSet upvoteSet = statement.executeQuery();
+			while (upvoteSet.next()) {
+				sum += upvoteSet.getInt(1);
 			}
 			statement = connection.prepareStatement("SELECT COUNT(*) FROM PostVote WHERE postId = ? AND value = ?");
 			statement.setInt(1, postId);
 			statement.setInt(2, -1);
-			resultSet = statement.executeQuery();
-			if (resultSet.next()) {
-				sum -= resultSet.getInt(1);
+			ResultSet downvoteSet = statement.executeQuery();
+			while (downvoteSet.next()) {
+				sum -= downvoteSet.getInt(1);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -457,22 +456,17 @@ public class DataAccesser {
 			statement.setInt(1, accountId);
 			statement.setInt(2, postId);
 			resultSet = statement.executeQuery();
+			
+			int result = 0;
 			while (resultSet.next()) {
-				int vote = resultSet.getInt("value");
-				return vote;
+				result += resultSet.getInt("value");
 			}
-
+			resultSet.close();
+			statement.close();
+			connection.close();
+			return result;
 		} catch(Exception ex) {
 			System.out.println("unable to get Post Vote: " + ex.getMessage() + "\n" + ex.getStackTrace());
-		} finally {
-	        // Close resources in the reverse order
-	        try {
-	        	if (resultSet != null) statement.close();
-	            if (statement != null) statement.close();
-	            if (connection != null) connection.close();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
 		}
 		return 0;
 	}

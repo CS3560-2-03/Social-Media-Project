@@ -64,11 +64,15 @@ public class VoteArrow extends JLabel {
 					//accountId grabbed on separate line for better error tracing
 					int accountId = Main.getCurrentAccountId();
 
+					// This should be refactored
 					//One of these should not be null
 					if(postRef != null) {
 						if (selected) {
-							DataAccesser.removePostVote(accountId, postRef.getPostId());;
+							DataAccesser.removePostVote(accountId, postRef.getPostId());
 						} else {
+							if (pair.isSelected()) {
+								DataAccesser.removePostVote(accountId, postRef.getPostId());
+							}
 							DataAccesser.uploadPostVote(accountId, postRef.getPostId(), direction);
 						}
 						voteText.setText(String.valueOf(postRef.refetchVotes()));
@@ -76,18 +80,17 @@ public class VoteArrow extends JLabel {
 						if (selected) {
 							DataAccesser.removeCommentVote(accountId, commentRef.getCommentId());
 						} else {
+							if (pair.isSelected()) {
+								DataAccesser.removePostVote(accountId, commentRef.getPostId());
+							}
 							DataAccesser.uploadCommentVote(accountId, commentRef.getCommentId(), direction);
 						}
 						voteText.setText(String.valueOf(commentRef.refetchVotes()));
 					} else {
 						System.out.println("VoteArrow had no reference to the comment/post it was attached to");
 						JOptionPane.showMessageDialog(null, "There was an error getting post/comment information. Please try refreshing the page.");
-
-
 					}
 				}
-
-
 
 				if (!selected) {
 					setSelected(true);
