@@ -69,7 +69,7 @@ public class ExpandedPost extends ScrollablePanel {
         authorPanel.add(spacingPanel, BorderLayout.CENTER);
         
         JLabel imageLabel = new JLabel();
-        if (post.getEmbedLink() != null) {
+        if (post.getEmbedLink() != null && post.getEmbedLink().length() > 0) {
         	try {
             	Image image = ImageIO.read(new URL(post.getEmbedLink()));
             	int width = Main.getContentFeed().getWidth();
